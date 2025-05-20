@@ -10,13 +10,13 @@ public class LayoutStudio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "row_layout")
+    @Column(name = "row_layout", nullable = false)
     private Integer row;
 
-    @Column(name = "column_layout")
+    @Column(name = "column_layout", nullable = false)
     private Integer column;
 
-    @Column(name = "type")
+    @Column(name = "type", nullable = false)
     private String type;
 
     @Column(name = "chair_number")

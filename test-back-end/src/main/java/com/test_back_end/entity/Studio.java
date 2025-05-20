@@ -12,11 +12,6 @@ public class Studio {
 
     private String number;
 
-    @Column(name = "max_row")
-    private Integer maxRow;
-    @Column(name = "max_column")
-    private Integer maxColumn;
-
     @JoinColumn(name = "theater_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Theater theater;
@@ -35,22 +30,6 @@ public class Studio {
 
     public void setNumber(String number) {
         this.number = number;
-    }
-
-    public Integer getMaxRow() {
-        return maxRow;
-    }
-
-    public void setMaxRow(Integer maxRow) {
-        this.maxRow = maxRow;
-    }
-
-    public Integer getMaxColumn() {
-        return maxColumn;
-    }
-
-    public void setMaxColumn(Integer maxColumn) {
-        this.maxColumn = maxColumn;
     }
 
     public Theater getTheater() {

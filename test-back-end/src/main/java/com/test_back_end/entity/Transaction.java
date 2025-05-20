@@ -12,31 +12,27 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "secure_id")
+    @Column(name = "secure_id", nullable = false)
     private String secureId;
 
     @JoinColumn(name = "account_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Account account;
 
-    @JoinColumn(name = "session_movie_id")
+    @JoinColumn(name = "studio_session_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private SessionMovie sessionMovie;
+    private StudioSession studioSession;
 
 
-    @Column(name = "chair_number")
+    @Column(name = "chair_number", nullable = false)
     private String chairNumber;
 
-    @Column(name = "price")
+    @Column(name = "price", nullable = false)
     private BigDecimal price;
-
-    @Column(name = "status")
-    private String status;
 
     @JoinColumn(name = "payment_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Payment payment;
-
 
     public Long getId() {
         return id;
@@ -62,12 +58,12 @@ public class Transaction {
         this.account = account;
     }
 
-    public SessionMovie getSessionMovie() {
-        return sessionMovie;
+    public StudioSession getStudioSession() {
+        return studioSession;
     }
 
-    public void setSessionMovie(SessionMovie sessionMovie) {
-        this.sessionMovie = sessionMovie;
+    public void setStudioSession(StudioSession studioSession) {
+        this.studioSession = studioSession;
     }
 
     public String getChairNumber() {
@@ -86,13 +82,6 @@ public class Transaction {
         this.price = price;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     public Payment getPayment() {
         return payment;

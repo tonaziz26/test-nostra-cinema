@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "studio_session")
@@ -21,11 +22,21 @@ public class StudioSession {
     @Column(name = "start_time")
     private LocalTime startTime;
 
-    @Column(name = "end_time")
-    private LocalTime endTime;
+    @Column(name = "duration")
+    private Integer duration;
 
-    @Column(name = "price")
+    @Column(name = "price" , nullable = false)
     private BigDecimal price;
+
+    @Column(name = "additional_price")
+    private BigDecimal additionalPrice = BigDecimal.ZERO;
+
+    @ManyToMany
+    @JoinTable(
+        name = "session_movie",
+        joinColumns = @JoinColumn(name = "studio_session_id"),
+        inverseJoinColumns = @JoinColumn(name = "movie_id"))
+    private Set<Movie> movies;
 
     public Long getId() {
         return id;
@@ -51,12 +62,12 @@ public class StudioSession {
         this.startTime = startTime;
     }
 
-    public LocalTime getEndTime() {
-        return endTime;
+    public Integer getDuration() {
+        return duration;
     }
 
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
+    public void setDuration(Integer duration) {
+        this.duration = duration;
     }
 
     public BigDecimal getPrice() {
@@ -65,5 +76,31 @@ public class StudioSession {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public BigDecimal getAdditionalPrice() {
+        return additionalPrice;
+    }
+
+    public void setAdditionalPrice(BigDecimal additionalPrice) {
+        this.additionalPrice = additionalPrice;
+    }
+
+    public Set<Movie> getMovies() {
+        return movies;
+    }
+
+    public void setMovies(Set<Movie> movies) {
+        this.movies = movies;
+    }
+
+    public void addMovie(Movie movie) {
+        this.movies.add(movie);
+        movie.getStudioSessions().add(this);
+    }
+
+    public void removeMovie(Movie movie) {
+        this.movies.remove(movie);
+        movie.getStudioSessions().remove(this);
     }
 }

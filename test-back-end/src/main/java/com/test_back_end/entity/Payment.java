@@ -2,6 +2,8 @@ package com.test_back_end.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "payment")
 public class Payment {
@@ -10,17 +12,21 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "secure_id")
+    @Column(name = "secure_id", nullable = false)
     private String secureId;
 
-    @Column(name = "type")
-    private String type;
 
-    @Column(name = "account_name")
-    private String accountName;
+    @Column(name = "payment_number", nullable = false)
+    private String paymentNumber;
 
-    @Column(name = "account_id")
-    private String accountId;
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "expired_time", nullable = false)
+    private LocalDateTime expiredTime;
+
+    @Column(name = "booking_date", nullable = false)
+    private LocalDateTime bookingDate;
 
     @Column(name = "total_price")
     private String totalPrice;
@@ -42,28 +48,28 @@ public class Payment {
         this.secureId = secureId;
     }
 
-    public String getType() {
-        return type;
+    public String getStatus() {
+        return status;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public String getAccountName() {
-        return accountName;
+    public LocalDateTime getExpiredTime() {
+        return expiredTime;
     }
 
-    public void setAccountName(String accountName) {
-        this.accountName = accountName;
+    public void setExpiredTime(LocalDateTime expiredTime) {
+        this.expiredTime = expiredTime;
     }
 
-    public String getAccountId() {
-        return accountId;
+    public LocalDateTime getBookingDate() {
+        return bookingDate;
     }
 
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
+    public void setBookingDate(LocalDateTime bookingDate) {
+        this.bookingDate = bookingDate;
     }
 
     public String getTotalPrice() {
@@ -72,6 +78,14 @@ public class Payment {
 
     public void setTotalPrice(String totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public String getPaymentNumber() {
+        return paymentNumber;
+    }
+
+    public void setPaymentNumber(String paymentNumber) {
+        this.paymentNumber = paymentNumber;
     }
 }
 
