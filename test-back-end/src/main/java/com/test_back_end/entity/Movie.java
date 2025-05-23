@@ -22,6 +22,9 @@ public class Movie {
     @Column(name = "end_date")
     private LocalDate endDate;
 
+    @Column(name = "url_image")
+    private String urlImage;
+
     @ManyToMany(mappedBy = "movies")
     private Set<StudioSession> studioSessions;
 
@@ -63,5 +66,13 @@ public class Movie {
 
     public void setStudioSessions(Set<StudioSession> studioSessions) {
         this.studioSessions = studioSessions;
+    }
+
+    public String getUrlImage() {
+        return urlImage;
+    }
+
+    public void setUrlImage(String urlImage) {
+        this.urlImage = urlImage;
     }
 }
