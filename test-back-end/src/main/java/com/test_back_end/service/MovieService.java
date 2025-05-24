@@ -1,6 +1,8 @@
 package com.test_back_end.service;
 
 import com.test_back_end.dto.MovieDTO;
+import com.test_back_end.dto.MovieDetailDTO;
+import com.test_back_end.enums.MovieStatus;
 import com.test_back_end.dto.PageResultDTO;
 import com.test_back_end.entity.Movie;
 import com.test_back_end.repository.MovieRepository;
@@ -38,6 +40,30 @@ public class MovieService {
         Page<Movie> moviePage = movieRepository.findByNameContainingIgnoreCase(name, pageable);
 
         return new PageResultDTO<>(toMovieDTOs(moviePage), moviePage.getTotalPages(), moviePage.getTotalElements());
+    }
+    
+    public MovieDetailDTO getMovieDetail(Long movieId) {
+        Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new RuntimeException("Movie not found"));
+
+        LocalDate currentDate = LocalDate.now();
+        MovieStatus status;
+
+        if (currentDate.isBefore(movie.getStartDate())) {
+            status = MovieStatus.COMING_SOON;
+        } else if (currentDate.isAfter(movie.getEndDate())) {
+            status = MovieStatus.NOT_AVAILABLE;
+        } else {
+            status = MovieStatus.NOW_PLAYING;
+        }
+
+        return new MovieDetailDTO(
+                movie.getId(),
+                movie.getName(),
+                movie.getStartDate(),
+                movie.getEndDate(),
+                movie.getUrlImage(),
+                status
+        );
     }
 
     private List<MovieDTO> toMovieDTOs(Page<Movie> moviePage) {
