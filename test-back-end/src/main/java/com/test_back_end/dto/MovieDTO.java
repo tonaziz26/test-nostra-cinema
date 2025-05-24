@@ -5,18 +5,15 @@ import java.time.LocalDate;
 public class MovieDTO {
     private Long id;
     private String name;
-    private LocalDate startDate;
-    private LocalDate endDate;
+
     private String urlImage;
     
     public MovieDTO() {
     }
     
-    public MovieDTO(Long id, String name, LocalDate startDate, LocalDate endDate, String urlImage) {
+    public MovieDTO(Long id, String name, String urlImage) {
         this.id = id;
         this.name = name;
-        this.startDate = startDate;
-        this.endDate = endDate;
         this.urlImage = urlImage;
     }
 
@@ -34,22 +31,6 @@ public class MovieDTO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
     }
 
     public String getUrlImage() {

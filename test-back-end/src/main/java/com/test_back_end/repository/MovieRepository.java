@@ -23,4 +23,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             @Param("cityId") Long cityId,
             @Param("currentDate") LocalDate currentDate,
             Pageable pageable);
+
+    Page<Movie> findByNameContainingIgnoreCase(String name, Pageable pageable);
 }

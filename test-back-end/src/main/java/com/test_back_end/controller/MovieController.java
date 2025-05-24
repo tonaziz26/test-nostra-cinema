@@ -27,4 +27,17 @@ public class MovieController {
         
         return ResponseEntity.ok(movieService.getMovies(cityId, page, size, sort, direction));
     }
+
+    @GetMapping("")
+    public ResponseEntity<PageResultDTO<MovieDTO>> getListMovie(
+            @RequestParam(name = "name", defaultValue = "") String name,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size,
+            @RequestParam(name = "sort", defaultValue = "name") String sort,
+            @RequestParam(name = "direction", defaultValue = "asc") String direction) {
+
+        return ResponseEntity.ok(movieService.getListMovie(name, page, size, sort, direction));
+    }
+
+
 }

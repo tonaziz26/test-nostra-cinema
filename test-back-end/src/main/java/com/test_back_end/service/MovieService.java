@@ -28,16 +28,29 @@ public class MovieService {
 
         Page<Movie> moviePage = movieRepository.findMoviesByCityIdAndDateRange(cityId, LocalDate.now(), pageable);
 
-        List<MovieDTO> movieDTOs = moviePage.getContent().stream()
-                .map(m -> new MovieDTO(
-                        m.getId(),
-                        m.getName(),
-                        m.getStartDate(),
-                        m.getEndDate(),
-                        m.getUrlImage()
-                ))
+        return new PageResultDTO<>(toMovieDTOs(moviePage), moviePage.getTotalPages(), moviePage.getTotalElements());
+    }
+
+    public PageResultDTO<MovieDTO> getListMovie(String name, int page, int limit, String sort, String direction) {
+        Sort.Direction dir = PaginationUtil.getSortDirection(direction);
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(new Sort.Order(dir, sort)));
+
+        Page<Movie> moviePage = movieRepository.findByNameContainingIgnoreCase(name, pageable);
+
+        return new PageResultDTO<>(toMovieDTOs(moviePage), moviePage.getTotalPages(), moviePage.getTotalElements());
+    }
+
+    private List<MovieDTO> toMovieDTOs(Page<Movie> moviePage) {
+        return moviePage.getContent().stream()
+                .map(this::toMovieDTO)
                 .collect(Collectors.toList());
-        
-        return new PageResultDTO<>(movieDTOs, moviePage.getTotalPages(), moviePage.getTotalElements());
+    }
+
+    private MovieDTO toMovieDTO(Movie movie) {
+        return new MovieDTO(
+                movie.getId(),
+                movie.getName(),
+                movie.getUrlImage()
+        );
     }
 }
