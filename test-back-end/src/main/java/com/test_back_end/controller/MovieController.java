@@ -1,14 +1,12 @@
 package com.test_back_end.controller;
 
 import com.test_back_end.dto.MovieDTO;
+import com.test_back_end.dto.MovieDetailDTO;
 import com.test_back_end.dto.PageResultDTO;
 import com.test_back_end.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/movie")
@@ -38,6 +36,10 @@ public class MovieController {
 
         return ResponseEntity.ok(movieService.getListMovie(name, page, size, sort, direction));
     }
-
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<MovieDetailDTO> getMovieDetail(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(movieService.getMovieDetail(id));
+    }
 
 }
