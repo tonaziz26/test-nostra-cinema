@@ -1,45 +1,18 @@
-package com.test_back_end.entity;
+package com.test_back_end.dto;
 
 import com.test_back_end.enums.PaymentStatus;
-import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "payment")
-public class Payment {
+public class PaymentDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "secure_id", nullable = false)
     private String secureId;
-
-
-    @Column(name = "payment_number", nullable = false)
     private String paymentNumber;
-
-    @Column(name = "status")
     private PaymentStatus status;
-
-    @Column(name = "expired_time", nullable = false)
     private LocalDateTime expiredTime;
-
-    @Column(name = "booking_date", nullable = false)
     private LocalDateTime bookingDate;
-
-    @Column(name = "total_price")
     private String totalPrice;
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getSecureId() {
         return secureId;
@@ -47,6 +20,14 @@ public class Payment {
 
     public void setSecureId(String secureId) {
         this.secureId = secureId;
+    }
+
+    public String getPaymentNumber() {
+        return paymentNumber;
+    }
+
+    public void setPaymentNumber(String paymentNumber) {
+        this.paymentNumber = paymentNumber;
     }
 
     public PaymentStatus getStatus() {
@@ -80,13 +61,4 @@ public class Payment {
     public void setTotalPrice(String totalPrice) {
         this.totalPrice = totalPrice;
     }
-
-    public String getPaymentNumber() {
-        return paymentNumber;
-    }
-
-    public void setPaymentNumber(String paymentNumber) {
-        this.paymentNumber = paymentNumber;
-    }
 }
-
