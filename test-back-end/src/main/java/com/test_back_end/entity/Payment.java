@@ -4,6 +4,7 @@ import com.test_back_end.enums.PaymentStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "payment")
@@ -31,6 +32,9 @@ public class Payment {
 
     @Column(name = "total_price")
     private String totalPrice;
+
+    @OneToMany(mappedBy = "payment")
+    private Set<Transaction> transactions;
 
 
     public Long getId() {
@@ -87,6 +91,14 @@ public class Payment {
 
     public void setPaymentNumber(String paymentNumber) {
         this.paymentNumber = paymentNumber;
+    }
+
+    public Set<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(Set<Transaction> transactions) {
+        this.transactions = transactions;
     }
 }
 
