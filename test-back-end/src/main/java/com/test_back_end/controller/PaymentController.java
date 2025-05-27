@@ -6,6 +6,7 @@ import com.test_back_end.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,5 +27,10 @@ public class PaymentController {
             @RequestParam(name = "direction", defaultValue = "asc") String direction) {
         
         return ResponseEntity.ok(paymentService.getPaymentsByPaymentNumber(paymentNumber, page, size, sort, direction));
+    }
+    
+    @GetMapping("/{secureId}")
+    public ResponseEntity<PaymentDTO> getDetailPayment(@PathVariable String secureId) {
+        return ResponseEntity.ok(paymentService.getPaymentBySecureId(secureId));
     }
 }
