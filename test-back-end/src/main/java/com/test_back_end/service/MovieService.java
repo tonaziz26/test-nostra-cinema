@@ -1,6 +1,7 @@
 package com.test_back_end.service;
 
 import com.test_back_end.config.MinioProperties;
+import com.test_back_end.dto.MovieRequestDTO;
 import com.test_back_end.dto.MovieDTO;
 import com.test_back_end.dto.MovieDetailDTO;
 import com.test_back_end.dto.PresignedUrlResponseDTO;
@@ -11,7 +12,6 @@ import com.test_back_end.repository.MovieRepository;
 import com.test_back_end.util.PaginationUtil;
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
-import io.minio.errors.*;
 import io.minio.http.Method;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,10 +20,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -50,6 +49,26 @@ public class MovieService {
         );
 
         return new PresignedUrlResponseDTO(url, filename);
+    }
+
+    public MovieDTO createMovie(MovieRequestDTO request) {
+        Movie movie = new Movie();
+        movie.setName(request.getName());
+
+        movie.setStartDate(Instant.ofEpochMilli(request.getStartDate())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate());
+
+        movie.setEndDate(Instant.ofEpochMilli(request.getEndDate())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate());
+
+        if (request.getImageFileName() != null)
+            movie.setUrlImage(minioProperties.getUrl() + "/" + minioProperties.getBucketName() + "/" + request.getImageFileName());
+
+
+        Movie savedMovie = movieRepository.save(movie);
+        return toMovieDTO(savedMovie);
     }
 
      public PageResultDTO<MovieDTO> getMovies(Long cityId, int page, int limit, String sort, String direction) {
@@ -93,6 +112,8 @@ public class MovieService {
                 status
         );
     }
+
+
 
     private List<MovieDTO> toMovieDTOs(Page<Movie> moviePage) {
         return moviePage.getContent().stream()
