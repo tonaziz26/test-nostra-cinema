@@ -18,9 +18,9 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "INNER JOIN ss.studio s " +
             "INNER JOIN s.theater t " +
             "INNER JOIN t.city c " +
-           "WHERE c.id = :cityId AND :currentDate BETWEEN m.startDate AND m.endDate")
-    Page<Movie> findMoviesByCityIdAndDateRange(
-            @Param("cityId") Long cityId,
+           "WHERE c.code = :cityCode AND :currentDate BETWEEN m.startDate AND m.endDate")
+    Page<Movie> findMoviesByCityCodeAndDateRange(
+            @Param("cityCode") String cityCode,
             @Param("currentDate") LocalDate currentDate,
             Pageable pageable);
 

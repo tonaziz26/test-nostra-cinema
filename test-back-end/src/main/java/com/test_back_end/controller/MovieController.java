@@ -20,13 +20,13 @@ public class MovieController {
 
     @GetMapping("now-showing")
     public ResponseEntity<PageResultDTO<MovieDTO>> getMovies(
-            @RequestParam(name = "city_id") Long cityId,
+            @RequestParam(name = "city_code") String cityCode,
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size,
             @RequestParam(name = "sort", defaultValue = "name") String sort,
             @RequestParam(name = "direction", defaultValue = "asc") String direction) {
         
-        return ResponseEntity.ok(movieService.getMovies(cityId, page, size, sort, direction));
+        return ResponseEntity.ok(movieService.getMovies(cityCode, page, size, sort, direction));
     }
 
     @GetMapping("")

@@ -2,8 +2,6 @@ package com.test_back_end.service;
 
 import com.test_back_end.dto.StudioSessionDTO;
 import com.test_back_end.dto.TheaterDto;
-import com.test_back_end.entity.StudioSession;
-import com.test_back_end.entity.Theater;
 import com.test_back_end.entity.sql_response.StudioSessionSQL;
 import com.test_back_end.repository.StudioSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +11,6 @@ import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,13 +25,13 @@ public class StudioSessionService {
         this.studioSessionRepository = studioSessionRepository;
     }
 
-    public Set<TheaterDto> getSessionList(Long cityId, Long movieId, Long dateStr) {
+    public Set<TheaterDto> getSessionList(String cityCode, Long movieId, Long dateStr) {
         LocalDate localDate = Instant.ofEpochMilli(dateStr)
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
 
         
-        List<StudioSessionSQL> sessions = studioSessionRepository.findSessionByCityIdAndDateRange(cityId, movieId, localDate);
+        List<StudioSessionSQL> sessions = studioSessionRepository.findSessionByCityCodeAndDateRange(cityCode, movieId, localDate);
         return mapToTheaterDtoSet(sessions, localDate);
     }
 
