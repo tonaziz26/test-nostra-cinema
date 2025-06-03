@@ -3,6 +3,7 @@ package com.test_back_end.entity;
 import com.test_back_end.enums.PaymentStatus;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -21,6 +22,7 @@ public class Payment {
     @Column(name = "payment_number", nullable = false)
     private String paymentNumber;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private PaymentStatus status;
 
@@ -31,7 +33,7 @@ public class Payment {
     private LocalDateTime bookingDate;
 
     @Column(name = "total_price")
-    private String totalPrice;
+    private BigDecimal totalPrice;
 
     @OneToMany(mappedBy = "payment")
     private Set<Transaction> transactions;
@@ -77,11 +79,11 @@ public class Payment {
         this.bookingDate = bookingDate;
     }
 
-    public String getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(String totalPrice) {
+    public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
     }
 

@@ -1,6 +1,7 @@
 package com.test_back_end.dto;
 
 import java.util.List;
+import java.util.Objects;
 
 public class TheaterDto  {
 
@@ -49,5 +50,18 @@ public class TheaterDto  {
 
     public void setStudiosSessions(List<StudioSessionDTO> studiosSessions) {
         this.studiosSessions = studiosSessions;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TheaterDto that = (TheaterDto) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
