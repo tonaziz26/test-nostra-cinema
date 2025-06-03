@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: nostra-cinema
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/nostra_cinema
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+      MINIO_INTERNAL_ENDPOINT: http://minio:9000
+      MINIO_EXTERNAL_ENDPOINT: http://192.168.100.123:9000
+      MINIO_ACCESS_KEY: ROOTNAME
+      MINIO_SECRET_KEY: CHANGEME123
+    depends_on:
+      - db
+      - minio
+      - createbuckets
+    networks:
+      - app-network
+
+  db:
+    image: postgres:14
+    container_name: nostra_cinema-db
+    environment:
+      POSTGRES_DB: nostra_cinema
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5434:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ROOTNAME
+      MINIO_ROOT_PASSWORD: CHANGEME123
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - app-network
+
+  createbuckets:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      sleep 5;
+      /usr/bin/mc alias set myminio http://minio:9000 ROOTNAME CHANGEME123;
+      /usr/bin/mc mb myminio/cinema-media --ignore-existing;
+      exit 0;
+      "
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db_data:
+  minio_data: 
