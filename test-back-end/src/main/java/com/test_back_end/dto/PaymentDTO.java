@@ -2,6 +2,7 @@ package com.test_back_end.dto;
 
 import com.test_back_end.enums.PaymentStatus;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class PaymentDTO {
@@ -11,7 +12,7 @@ public class PaymentDTO {
     private PaymentStatus status;
     private LocalDateTime expiredTime;
     private LocalDateTime bookingDate;
-    private String totalPrice;
+    private BigDecimal totalPrice;
 
 
     public String getSecureId() {
@@ -54,11 +55,11 @@ public class PaymentDTO {
         this.bookingDate = bookingDate;
     }
 
-    public String getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(String totalPrice) {
+    public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
     }
 }

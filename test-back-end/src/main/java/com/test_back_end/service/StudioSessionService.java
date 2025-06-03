@@ -4,12 +4,15 @@ import com.test_back_end.dto.StudioSessionDTO;
 import com.test_back_end.dto.TheaterDto;
 import com.test_back_end.entity.StudioSession;
 import com.test_back_end.entity.Theater;
+import com.test_back_end.entity.sql_response.StudioSessionSQL;
 import com.test_back_end.repository.StudioSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,40 +29,38 @@ public class StudioSessionService {
         this.studioSessionRepository = studioSessionRepository;
     }
 
-    public Set<TheaterDto> getSessionList(Long cityId, Long movieId, String dateStr) {
-        LocalDate localDate;
-        try {
-            localDate = LocalDate.parse(dateStr);
-        } catch (DateTimeParseException e) {
-            throw new DateTimeParseException("Invalid date format. Use ISO format (yyyy-MM-dd)", dateStr, e.getErrorIndex());
-        }
+    public Set<TheaterDto> getSessionList(Long cityId, Long movieId, Long dateStr) {
+        LocalDate localDate = Instant.ofEpochMilli(dateStr)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+
         
-        List<StudioSession> sessions = studioSessionRepository.findSessionByCityIdAndDateRange(cityId, movieId, localDate);
+        List<StudioSessionSQL> sessions = studioSessionRepository.findSessionByCityIdAndDateRange(cityId, movieId, localDate);
         return mapToTheaterDtoSet(sessions, localDate);
     }
 
-    private Set<TheaterDto> mapToTheaterDtoSet(List<StudioSession> sessions, LocalDate date) {
+    private Set<TheaterDto> mapToTheaterDtoSet(List<StudioSessionSQL> sessions, LocalDate date) {
 
-        Set<TheaterDto> theaterDtos = sessions.stream().map(session -> {
-            Theater theater = session.getStudio().getTheater();
-
-            TheaterDto dto = new TheaterDto();
-            dto.setId(theater.getId());
-            dto.setName(theater.getName());
-            dto.setCode(theater.getCode());
-            dto.setAddress(theater.getAddress());
-            return dto;
-        }).collect(Collectors.toSet());
+        Set<TheaterDto> theaterDtos = sessions.stream()
+                .map(sql -> {
+                    TheaterDto dto = new TheaterDto();
+                    dto.setId(sql.getTheaterId());
+                    dto.setName(sql.getTheaterName());
+                    dto.setCode(sql.getTheaterCode());
+                    dto.setAddress(sql.getTheaterAddress());
+                    return dto;
+                })
+                .collect(Collectors.toSet());
 
         theaterDtos.forEach(theaterDto -> {
             theaterDto.setStudiosSessions(sessions.stream().filter(
-                    session -> session.getStudio().getTheater().getId().equals(theaterDto.getId()))
+                    session -> session.getTheaterId().equals(theaterDto.getId()))
                     .map(session -> {
                         StudioSessionDTO dto = new StudioSessionDTO();
-                        dto.setId(session.getId());
+                        dto.setId(session.getStudioSessionId());
                         dto.setStartTime(session.getStartTime());
                         dto.setPrice(isWeekend(date) ? session.getPrice().add(session.getAdditionalPrice()) : session.getPrice());
-                        dto.setStudioNumber(session.getStudio().getNumber());
+                        dto.setStudioNumber(session.getStudioNumber());
                         return dto;
                     }).collect(Collectors.toList()));
         });
