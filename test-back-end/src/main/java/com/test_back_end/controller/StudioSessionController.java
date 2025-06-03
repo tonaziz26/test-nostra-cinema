@@ -29,11 +29,11 @@ public class StudioSessionController {
 
     @GetMapping("/available")
     public ResponseEntity<Set<TheaterDto>> getSessionList(
-            @RequestParam(name = "city_id") @NotNull(message = "City id is required") Long cityId,
+            @RequestParam(name = "city_code") @NotNull(message = "City code is required") String cityCode,
             @RequestParam(name = "movie_id") @NotNull(message = "Movie id is required") Long movieId,
             @RequestParam(name = "date") @NotNull(message = "Date is required") @FutureOrTodayEpoch Long date) {
         
-        Set<TheaterDto> theaters = studioSessionService.getSessionList(cityId, movieId, date);
+        Set<TheaterDto> theaters = studioSessionService.getSessionList(cityCode, movieId, date);
         return ResponseEntity.ok(theaters);
     }
 }

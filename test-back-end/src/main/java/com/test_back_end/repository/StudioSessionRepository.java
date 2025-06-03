@@ -24,9 +24,9 @@ public interface StudioSessionRepository extends JpaRepository<StudioSession, Lo
             "INNER JOIN City c on c.id = t.city.id " +
             "WHERE m.id = :movieId " +
             "AND :date BETWEEN m.startDate AND m.endDate " +
-            "AND c.id = :cityId")
-    List<StudioSessionSQL> findSessionByCityIdAndDateRange(
-            @Param("cityId") Long cityId,
+            "AND c.code = :cityCode")
+    List<StudioSessionSQL> findSessionByCityCodeAndDateRange(
+            @Param("cityCode") String cityCode,
             @Param("movieId") Long movieId,
             @Param("date") LocalDate date);
 

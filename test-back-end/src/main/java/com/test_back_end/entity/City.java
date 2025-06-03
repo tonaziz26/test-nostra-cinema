@@ -12,6 +12,9 @@ public class City {
 
     private String name;
 
+    @Column(nullable = false, unique = true)
+    private String code;
+
 
     public Long getId() {
         return id;
@@ -27,5 +30,13 @@ public class City {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

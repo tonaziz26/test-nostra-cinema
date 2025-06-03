@@ -71,11 +71,11 @@ public class MovieService {
         return toMovieDTO(savedMovie);
     }
 
-     public PageResultDTO<MovieDTO> getMovies(Long cityId, int page, int limit, String sort, String direction) {
+     public PageResultDTO<MovieDTO> getMovies(String  cityCode, int page, int limit, String sort, String direction) {
         Sort.Direction dir = PaginationUtil.getSortDirection(direction);
         Pageable pageable = PageRequest.of(page, limit, Sort.by(new Sort.Order(dir, sort)));
 
-        Page<Movie> moviePage = movieRepository.findMoviesByCityIdAndDateRange(cityId, LocalDate.now(), pageable);
+        Page<Movie> moviePage = movieRepository.findMoviesByCityCodeAndDateRange(cityCode, LocalDate.now(), pageable);
 
         return new PageResultDTO<>(toMovieDTOs(moviePage), moviePage.getTotalPages(), moviePage.getTotalElements());
     }
