@@ -1,14 +1,16 @@
 package com.test_back_end.dto;
 
+import com.test_back_end.validation.EndDateAfterStartDate;
 import com.test_back_end.validation.FutureOrTodayEpoch;
 import com.test_back_end.validation.UniqueMovieName;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+@EndDateAfterStartDate()
 public class MovieRequestDTO {
 
     @NotBlank(message = "Name is required")
-    @UniqueMovieName(message = "Movie name already exists")
+    @UniqueMovieName()
     private String name;
 
     @NotNull(message = "Start date is required")

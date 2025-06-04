@@ -64,7 +64,7 @@ public class MovieService {
                 .toLocalDate());
 
         if (request.getImageFileName() != null)
-            movie.setUrlImage(minioProperties.getUrl() + "/" + minioProperties.getBucketName() + "/" + request.getImageFileName());
+            movie.setUrlImage( "/" + request.getImageFileName());
 
 
         Movie savedMovie = movieRepository.save(movie);
@@ -108,7 +108,7 @@ public class MovieService {
                 movie.getName(),
                 movie.getStartDate(),
                 movie.getEndDate(),
-                movie.getUrlImage(),
+                minioProperties.getUrl() + "/" + minioProperties.getBucketName() + movie.getUrlImage(),
                 status
         );
     }
@@ -125,7 +125,7 @@ public class MovieService {
         return new MovieDTO(
                 movie.getId(),
                 movie.getName(),
-                movie.getUrlImage()
+                minioProperties.getUrl() + "/" + minioProperties.getBucketName() + movie.getUrlImage()
         );
     }
 }

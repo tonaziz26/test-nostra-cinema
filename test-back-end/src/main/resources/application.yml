@@ -8,7 +8,7 @@ spring:
       idle-timeout: 600000
       max-lifetime: 1800000
       maximum-pool-size: 10
-    url: jdbc:postgresql://localhost:5432/nostra_cinema
+    url: jdbc:postgresql://localhost:5434/nostra_cinema
     username: postgres
     password: admin
   jpa:
@@ -22,6 +22,8 @@ spring:
 
 minio:
   url: http://127.0.0.1:9000
-  access-key: hZFlRUmGv7AbixjasmEh
-  secret-key: mm8fSd7YECQlGPMBY5kycG9crTdWQqefwmyxcVXa
+#  access-key: hZFlRUmGv7AbixjasmEh
+#  secret-key: mm8fSd7YECQlGPMBY5kycG9crTdWQqefwmyxcVXa
   bucket-name: nostra-cinema
+  access-key: minioadmin
+  secret-key: minioadmin
