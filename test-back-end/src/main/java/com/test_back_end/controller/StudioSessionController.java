@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/api/sessions")
+@RequestMapping("/api/session")
 @Validated
 public class StudioSessionController {
 

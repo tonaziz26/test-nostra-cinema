@@ -1,7 +1,7 @@
 package com.test_back_end.service;
 
 import com.test_back_end.config.MinioProperties;
-import com.test_back_end.dto.MovieRequestDTO;
+import com.test_back_end.dto.request.MovieRequestDTO;
 import com.test_back_end.dto.MovieDTO;
 import com.test_back_end.dto.MovieDetailDTO;
 import com.test_back_end.dto.PresignedUrlResponseDTO;

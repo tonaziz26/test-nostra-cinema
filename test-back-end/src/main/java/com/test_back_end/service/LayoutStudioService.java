@@ -1,5 +1,7 @@
 package com.test_back_end.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.test_back_end.dto.LayoutStudioDTO;
 import com.test_back_end.entity.LayoutStudio;
 import com.test_back_end.entity.Transaction;
 import com.test_back_end.repository.LayoutStudioRepository;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LayoutStudioService {
@@ -18,9 +21,11 @@ public class LayoutStudioService {
     private LayoutStudioRepository layoutStudioRepository;
     @Autowired
     private TransactionRepository transactionRepository;
+    @Autowired
+    private ObjectMapper objectMapper;
 
 
-    public List<LayoutStudio> getLayoutStudio(Long studioSessionId, Long bookingDate) {
+    public List<LayoutStudioDTO> getLayoutStudio(Long studioSessionId, Long bookingDate) {
 
         List<LayoutStudio> layoutStudios = layoutStudioRepository.findByStudioSessionId(studioSessionId);
 
@@ -28,14 +33,26 @@ public class LayoutStudioService {
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime());
 
-        if (transactions != null) {
+        List<LayoutStudioDTO> layoutStudioDTOs = layoutStudios.stream()
+                .map(ls -> {
+                    LayoutStudioDTO dto = new LayoutStudioDTO();
+                    dto.setId(ls.getId());
+                    dto.setColumn(ls.getColumn());
+                    dto.setRow(ls.getRow());
+                    dto.setStatus(ls.getType());
+                    dto.setChairNumber(ls.getChairNumber());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        if (!transactions.isEmpty()) {
             transactions.forEach(t -> {
-                layoutStudios.stream().filter(ls -> ls.getChairNumber().equals(t.getChairNumber()))
-                        .forEach(ls -> ls.setType("BOOKED"));
+                layoutStudioDTOs.stream().filter(ls -> ls.getChairNumber().equals(t.getChairNumber()))
+                        .forEach(ls -> ls.setStatus("BOOKED"));
             });
         }
 
-        return layoutStudios;
+        return layoutStudioDTOs;
     }
 
 }
