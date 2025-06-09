@@ -1,6 +1,6 @@
 package com.test_back_end.validation;
 
-import com.test_back_end.dto.MovieRequestDTO;
+import com.test_back_end.dto.request.MovieRequestDTO;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

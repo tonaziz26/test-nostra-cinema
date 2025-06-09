@@ -2,14 +2,14 @@ package com.test_back_end.controller;
 
 import com.test_back_end.dto.PageResultDTO;
 import com.test_back_end.dto.PaymentDTO;
+import com.test_back_end.dto.PaymentDetailDTO;
+import com.test_back_end.dto.request.PaymentRequestDTO;
 import com.test_back_end.service.PaymentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/payment")
@@ -30,7 +30,13 @@ public class PaymentController {
     }
     
     @GetMapping("/{secureId}")
-    public ResponseEntity<PaymentDTO> getDetailPayment(@PathVariable String secureId) {
+    public ResponseEntity<PaymentDetailDTO> getDetailPayment(@PathVariable String secureId) {
         return ResponseEntity.ok(paymentService.getPaymentBySecureId(secureId));
+    }
+    
+    @PostMapping
+    public ResponseEntity<PaymentDTO> createPayment(@Valid @RequestBody PaymentRequestDTO paymentRequestDTO) {
+        PaymentDTO paymentDTO = paymentService.createPayment(paymentRequestDTO);
+        return new ResponseEntity<>(paymentDTO, HttpStatus.CREATED);
     }
 }

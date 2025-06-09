@@ -1,6 +1,6 @@
 package com.test_back_end.controller;
 
-import com.test_back_end.dto.MovieRequestDTO;
+import com.test_back_end.dto.request.MovieRequestDTO;
 import com.test_back_end.dto.MovieDTO;
 import com.test_back_end.dto.MovieDetailDTO;
 import com.test_back_end.dto.PageResultDTO;

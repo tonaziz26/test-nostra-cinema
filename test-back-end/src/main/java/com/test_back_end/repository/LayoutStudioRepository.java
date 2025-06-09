@@ -13,6 +13,6 @@ public interface LayoutStudioRepository extends JpaRepository<LayoutStudio, Long
     @Query(value = "select ls.* from layout_studio ls " +
             "inner join studio s on ls.studio_id = s.id " +
             "inner join studio_session ss on ss.studio_id = s.id " +
-            "where s.studio_session_id = :studioSessionId", nativeQuery = true)
+            "where ss.id = :studioSessionId", nativeQuery = true)
     List<LayoutStudio> findByStudioSessionId(Long studioSessionId);
 }
