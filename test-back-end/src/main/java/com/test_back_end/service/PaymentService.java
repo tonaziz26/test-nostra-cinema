@@ -4,12 +4,10 @@ import com.test_back_end.dto.PageResultDTO;
 import com.test_back_end.dto.PaymentDTO;
 import com.test_back_end.dto.PaymentDetailDTO;
 import com.test_back_end.dto.TransactionDTO;
+import com.test_back_end.dto.request.PaymentApprovalDTO;
 import com.test_back_end.dto.request.PaymentRequestDTO;
 import com.test_back_end.dto.request.TransactionRequestDTO;
-import com.test_back_end.entity.Account;
-import com.test_back_end.entity.Payment;
-import com.test_back_end.entity.StudioSession;
-import com.test_back_end.entity.Transaction;
+import com.test_back_end.entity.*;
 import com.test_back_end.enums.PaymentStatus;
 import com.test_back_end.repository.AccountRepository;
 import com.test_back_end.repository.PaymentRepository;
@@ -136,6 +134,24 @@ public class PaymentService {
         
         transactionRepository.saveAll(transactions);
         
+        return convertToDTO(payment);
+    }
+
+    @Transactional
+    public PaymentDTO updatePaymentStatus(String secureId, PaymentApprovalDTO approvalDTO) {
+        Payment payment = paymentRepository.findBySecureId(secureId)
+                .orElseThrow(() -> new RuntimeException("Payment not found with secureId: " + secureId));
+
+        if (!payment.getStatus().equals(PaymentStatus.WAITING_FOR_PAYMENT)) {
+            throw new RuntimeException("Payment cannot be updated with secureId: " + secureId);
+        }
+
+        if (LocalDateTime.now().isAfter(payment.getExpiredTime()) && !approvalDTO.getStatus().equals(PaymentStatus.SUCCESS)) {
+            throw new RuntimeException("Payment was expired with secureId: " + secureId);
+        }
+
+        payment.setStatus(approvalDTO.getStatus());
+
         return convertToDTO(payment);
     }
 

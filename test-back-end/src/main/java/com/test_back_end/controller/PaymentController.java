@@ -3,6 +3,7 @@ package com.test_back_end.controller;
 import com.test_back_end.dto.PageResultDTO;
 import com.test_back_end.dto.PaymentDTO;
 import com.test_back_end.dto.PaymentDetailDTO;
+import com.test_back_end.dto.request.PaymentApprovalDTO;
 import com.test_back_end.dto.request.PaymentRequestDTO;
 import com.test_back_end.service.PaymentService;
 import jakarta.validation.Valid;
@@ -38,5 +39,12 @@ public class PaymentController {
     public ResponseEntity<PaymentDTO> createPayment(@Valid @RequestBody PaymentRequestDTO paymentRequestDTO) {
         PaymentDTO paymentDTO = paymentService.createPayment(paymentRequestDTO);
         return new ResponseEntity<>(paymentDTO, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/update-status/{secureId}")
+    public ResponseEntity<PaymentDTO> updatePaymentStatus(@PathVariable String secureId,
+                                                          @Valid @RequestBody PaymentApprovalDTO approvalDTO) {
+        PaymentDTO paymentDTO = paymentService.updatePaymentStatus(secureId, approvalDTO);
+        return new ResponseEntity<>(paymentDTO, HttpStatus.OK);
     }
 }

@@ -1,6 +1,5 @@
 package com.test_back_end.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test_back_end.dto.LayoutStudioDTO;
 import com.test_back_end.entity.LayoutStudio;
 import com.test_back_end.entity.Transaction;
@@ -22,8 +21,7 @@ public class LayoutStudioService {
     private LayoutStudioRepository layoutStudioRepository;
     @Autowired
     private TransactionRepository transactionRepository;
-    @Autowired
-    private ObjectMapper objectMapper;
+
 
 
     public List<LayoutStudioDTO> getLayoutStudio(Long studioSessionId, Long bookingDate) {

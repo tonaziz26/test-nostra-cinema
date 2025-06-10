@@ -4,6 +4,10 @@ import java.util.List;
 
 public class PaymentDetailDTO extends PaymentDTO {
 
+    //coming soon
+    //private String location;
+    //private String studio;
+
     private List<TransactionDTO> transactions;
 
     public List<TransactionDTO> getTransactions() {
