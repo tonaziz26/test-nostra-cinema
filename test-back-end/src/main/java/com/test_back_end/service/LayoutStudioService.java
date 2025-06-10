@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test_back_end.dto.LayoutStudioDTO;
 import com.test_back_end.entity.LayoutStudio;
 import com.test_back_end.entity.Transaction;
+import com.test_back_end.enums.ChairStatus;
 import com.test_back_end.repository.LayoutStudioRepository;
 import com.test_back_end.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,17 +30,17 @@ public class LayoutStudioService {
 
         List<LayoutStudio> layoutStudios = layoutStudioRepository.findByStudioSessionId(studioSessionId);
 
-        List<Transaction> transactions = transactionRepository.findByPaymentBookingDate(Instant.ofEpochMilli(bookingDate)
+        List<Transaction> transactions = transactionRepository.findByPaymentBookingDateAndSessionId(Instant.ofEpochMilli(bookingDate)
                 .atZone(ZoneId.systemDefault())
-                .toLocalDateTime());
+                .toLocalDateTime(), studioSessionId);
 
         List<LayoutStudioDTO> layoutStudioDTOs = layoutStudios.stream()
                 .map(ls -> {
                     LayoutStudioDTO dto = new LayoutStudioDTO();
                     dto.setId(ls.getId());
-                    dto.setColumn(ls.getColumn());
-                    dto.setRow(ls.getRow());
-                    dto.setStatus(ls.getType());
+                    dto.setRowLayout(ls.getYLayout());
+                    dto.setColumnLayout(ls.getXLayout());
+                    dto.setStatus(ls.getStatus());
                     dto.setChairNumber(ls.getChairNumber());
                     return dto;
                 })
@@ -47,8 +48,9 @@ public class LayoutStudioService {
 
         if (!transactions.isEmpty()) {
             transactions.forEach(t -> {
-                layoutStudioDTOs.stream().filter(ls -> ls.getChairNumber().equals(t.getChairNumber()))
-                        .forEach(ls -> ls.setStatus("BOOKED"));
+                layoutStudioDTOs.stream()
+                        .filter(ls -> null != ls.getChairNumber() && ls.getChairNumber().equals(t.getChairNumber()))
+                        .forEach(ls -> ls.setStatus(ChairStatus.BOOKED));
             });
         }
 

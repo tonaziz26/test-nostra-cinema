@@ -14,7 +14,7 @@ public class UniqueMovieNameValidator implements ConstraintValidator<UniqueMovie
 
     @Override
     public boolean isValid(String name, ConstraintValidatorContext context) {
-        if (name == null || name.trim().isEmpty()) return true; // biarkan @NotBlank yang handle
+        if (name == null || name.trim().isEmpty()) return true;
         return !movieRepository.existsByNameIgnoreCase(name.trim());
     }
 }

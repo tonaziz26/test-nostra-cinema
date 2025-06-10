@@ -108,6 +108,9 @@ public class PaymentService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         payment.setTotalPrice(totalPrice);
 
+        StudioSession studioSession = studioSessionRepository.findById(paymentRequestDTO.getStudioSessionId())
+                .orElseThrow(() -> new RuntimeException("Studio Session not found with ID: " + paymentRequestDTO.getStudioSessionId()));
+
         payment.setPaymentNumber(generatePaymentNumber(payment.getSecureId()) );
 
         payment = paymentRepository.save(payment);
@@ -121,8 +124,7 @@ public class PaymentService {
                     .orElseThrow(() -> new RuntimeException("Account not found with ID: " + transactionDTO.getAccountId()));
             transaction.setAccount(account);
             
-            StudioSession studioSession = studioSessionRepository.findById(transactionDTO.getStudioSessionId())
-                    .orElseThrow(() -> new RuntimeException("Studio Session not found with ID: " + transactionDTO.getStudioSessionId()));
+
             transaction.setStudioSession(studioSession);
             
             transaction.setChairNumber(transactionDTO.getChairNumber());

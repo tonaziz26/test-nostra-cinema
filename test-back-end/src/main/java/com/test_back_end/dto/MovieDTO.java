@@ -1,7 +1,5 @@
 package com.test_back_end.dto;
 
-import java.time.LocalDate;
-
 public class MovieDTO {
     private Long id;
     private String name;

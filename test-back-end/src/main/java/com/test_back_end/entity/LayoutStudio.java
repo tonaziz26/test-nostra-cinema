@@ -1,5 +1,6 @@
 package com.test_back_end.entity;
 
+import com.test_back_end.enums.ChairStatus;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,14 +11,15 @@ public class LayoutStudio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "row_layout", nullable = false)
-    private Integer row;
+    @Column(name = "x_layout", nullable = false)
+    private Integer xLayout;
 
-    @Column(name = "column_layout", nullable = false)
-    private Integer column;
+    @Column(name = "y_layout", nullable = false)
+    private Integer yLayout;
 
-    @Column(name = "type", nullable = false)
-    private String type;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private ChairStatus status;
 
     @Column(name = "chair_number")
     private String chairNumber;
@@ -34,28 +36,28 @@ public class LayoutStudio {
         this.id = id;
     }
 
-    public Integer getRow() {
-        return row;
+    public Integer getXLayout() {
+        return xLayout;
     }
 
-    public void setRow(Integer row) {
-        this.row = row;
+    public void setXLayout(Integer row) {
+        this.xLayout = row;
     }
 
-    public Integer getColumn() {
-        return column;
+    public Integer getYLayout() {
+        return yLayout;
     }
 
-    public void setColumn(Integer column) {
-        this.column = column;
+    public void setYLayout(Integer column) {
+        this.yLayout = column;
     }
 
-    public String getType() {
-        return type;
+    public ChairStatus getStatus() {
+        return status;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setStatus(ChairStatus status) {
+        this.status = status;
     }
 
     public String getChairNumber() {

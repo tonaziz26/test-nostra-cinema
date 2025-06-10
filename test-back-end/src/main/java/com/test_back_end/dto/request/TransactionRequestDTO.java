@@ -8,12 +8,12 @@ import java.math.BigDecimal;
 
 public class TransactionRequestDTO {
     
-    @NotNull(message = "Account ID is required")
+    @NotNull(message = "Account id is required")
     private String accountId;
-    
-    @NotNull(message = "Studio session ID is required")
-    private Long studioSessionId;
-    
+
+    @NotNull(message = "order number is required")
+    private Integer orderNumber; // help to sorting
+
     @NotBlank(message = "Chair number is required")
     private String chairNumber;
     
@@ -27,14 +27,6 @@ public class TransactionRequestDTO {
 
     public void setAccountId(String accountId) {
         this.accountId = accountId;
-    }
-
-    public Long getStudioSessionId() {
-        return studioSessionId;
-    }
-
-    public void setStudioSessionId(Long studioSessionId) {
-        this.studioSessionId = studioSessionId;
     }
 
     public String getChairNumber() {
@@ -51,5 +43,13 @@ public class TransactionRequestDTO {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public Integer getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(Integer orderNumber) {
+        this.orderNumber = orderNumber;
     }
 }
