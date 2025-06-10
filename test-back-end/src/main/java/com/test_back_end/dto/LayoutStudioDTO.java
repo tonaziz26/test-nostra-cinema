@@ -1,11 +1,13 @@
 package com.test_back_end.dto;
 
+import com.test_back_end.enums.ChairStatus;
+
 public class LayoutStudioDTO {
 
     private Long id;
-    private Integer row;
-    private Integer column;
-    private String status;
+    private Integer columnLayout;
+    private Integer rowLayout;
+    private ChairStatus status;
     private String chairNumber;
 
     public Long getId() {
@@ -16,27 +18,27 @@ public class LayoutStudioDTO {
         this.id = id;
     }
 
-    public Integer getRow() {
-        return row;
+    public Integer getColumnLayout() {
+        return columnLayout;
     }
 
-    public void setRow(Integer row) {
-        this.row = row;
+    public void setColumnLayout(Integer columnLayout) {
+        this.columnLayout = columnLayout;
     }
 
-    public Integer getColumn() {
-        return column;
+    public Integer getRowLayout() {
+        return rowLayout;
     }
 
-    public void setColumn(Integer column) {
-        this.column = column;
+    public void setRowLayout(Integer rowLayout) {
+        this.rowLayout = rowLayout;
     }
 
-    public String getStatus() {
+    public ChairStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(ChairStatus status) {
         this.status = status;
     }
 

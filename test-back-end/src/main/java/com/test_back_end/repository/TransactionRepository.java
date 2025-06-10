@@ -13,9 +13,12 @@ import java.util.List;
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
     @Query(value = "SELECT t.* FROM transaction t " +
-           "inner join payment p ON t.payment_id = p.id " +
-           "WHERE p.booking_date = :bookingDate", 
-           nativeQuery = true)
-    List<Transaction> findByPaymentBookingDate(@Param("bookingDate") LocalDateTime bookingDate);
+            "inner join payment p ON t.payment_id = p.id " +
+            "WHERE p.booking_date = :bookingDate " +
+            "AND t.studio_session_id = :studioSessionId",
+            nativeQuery = true)
+    List<Transaction> findByPaymentBookingDateAndSessionId(
+            @Param("bookingDate") LocalDateTime bookingDate,
+            @Param("studioSessionId") Long studioSessionId);
 
 }
