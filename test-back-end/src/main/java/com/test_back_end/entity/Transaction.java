@@ -23,6 +23,10 @@ public class Transaction {
     @ManyToOne(fetch = FetchType.LAZY)
     private StudioSession studioSession;
 
+    @JoinColumn(name = "session_movie_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private SessionMovie sessionMovie;
+
 
     @Column(name = "chair_number", nullable = false)
     private String chairNumber;
@@ -89,5 +93,13 @@ public class Transaction {
 
     public void setPayment(Payment payment) {
         this.payment = payment;
+    }
+
+    public SessionMovie getSessionMovie() {
+        return sessionMovie;
+    }
+
+    public void setSessionMovie(SessionMovie sessionMovie) {
+        this.sessionMovie = sessionMovie;
     }
 }

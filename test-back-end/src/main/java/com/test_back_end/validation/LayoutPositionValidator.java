@@ -22,8 +22,7 @@ public class LayoutPositionValidator implements ConstraintValidator<LayoutPositi
     public boolean isValid(PaymentRequestDTO paymentRequestDTO, ConstraintValidatorContext context) {
 
         List<LayoutStudioDTO> layoutStudios = layoutStudioService.getLayoutStudio(
-                paymentRequestDTO.getStudioSessionId(),
-                paymentRequestDTO.getBookingDateEpoch());
+                paymentRequestDTO.getStudioSessionId());
 
 
         paymentRequestDTO.getTransactions().sort(
