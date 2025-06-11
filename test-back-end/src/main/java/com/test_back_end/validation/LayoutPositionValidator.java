@@ -63,6 +63,9 @@ public class LayoutPositionValidator implements ConstraintValidator<LayoutPositi
         // validation right side
 
         String chairNumberRight = paymentRequestDTO.getTransactions().get(paymentRequestDTO.getTransactions().size() - 1).getChairNumber();
+
+        // buat 1 baris
+        // buat di db
         Optional<LayoutStudioDTO> currentChairRight = layoutStudios.stream()
                 .filter(ls -> chairNumberLeft.equals(ls.getChairNumber()))
                 .findFirst();

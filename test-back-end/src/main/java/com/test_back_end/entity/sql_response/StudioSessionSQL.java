@@ -1,7 +1,7 @@
 package com.test_back_end.entity.sql_response;
 
 import java.math.BigDecimal;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 public class StudioSessionSQL {
 
@@ -10,8 +10,8 @@ public class StudioSessionSQL {
     private String theaterCode;
     private String theaterAddress;
 
-    private Long studioSessionId;
-    private LocalTime startTime;
+    private Long studioSessionMovieId;
+    private LocalDateTime startTime;
     private BigDecimal price;
     private BigDecimal additionalPrice;
 
@@ -19,13 +19,13 @@ public class StudioSessionSQL {
 
 
     public StudioSessionSQL(Long theaterId, String theaterName, String theaterCode, String theaterAddress,
-                            Long studioSessionId, LocalTime startTime, BigDecimal price,
+                            Long studioSessionMovieId, LocalDateTime startTime, BigDecimal price,
                             BigDecimal additionalPrice, String studioNumber) {
         this.theaterId = theaterId;
         this.theaterName = theaterName;
         this.theaterCode = theaterCode;
         this.theaterAddress = theaterAddress;
-        this.studioSessionId = studioSessionId;
+        this.studioSessionMovieId = studioSessionMovieId;
         this.startTime = startTime;
         this.price = price;
         this.additionalPrice = additionalPrice;
@@ -64,19 +64,19 @@ public class StudioSessionSQL {
         this.theaterAddress = theaterAddress;
     }
 
-    public Long getStudioSessionId() {
-        return studioSessionId;
+    public Long getStudioSessionMovieId() {
+        return studioSessionMovieId;
     }
 
-    public void setStudioSessionId(Long studioSessionId) {
-        this.studioSessionId = studioSessionId;
+    public void setStudioSessionMovieId(Long studioSessionMovieId) {
+        this.studioSessionMovieId = studioSessionMovieId;
     }
 
-    public LocalTime getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalTime startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 

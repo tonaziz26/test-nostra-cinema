@@ -16,7 +16,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             "inner join payment p ON t.payment_id = p.id " +
             "WHERE p.booking_date = :bookingDate " +
             "AND t.studio_session_id = :studioSessionId " +
-            "AND ((p.status = 'WAITING_FOR_PAYMENT' AND p.expire_date > NOW()) OR p.status = 'SUCCESS')",
+            "AND ((p.status = 'WAITING_FOR_PAYMENT' AND p.expired_time > NOW()) OR p.status = 'SUCCESS')",
             nativeQuery = true)
     List<Transaction> findByPaymentBookingDateAndSessionId(
             @Param("bookingDate") LocalDateTime bookingDate,

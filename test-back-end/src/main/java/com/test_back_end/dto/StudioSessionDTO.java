@@ -1,12 +1,13 @@
 package com.test_back_end.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class StudioSessionDTO {
 
     private Long id;
-    private LocalTime startTime;
+    private LocalDateTime startTime;
     private BigDecimal price;
 
     private String studioNumber;
@@ -19,11 +20,11 @@ public class StudioSessionDTO {
         this.id = id;
     }
 
-    public LocalTime getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalTime startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
