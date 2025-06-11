@@ -1,0 +1,50 @@
+package com.test_back_end.controller;
+
+import com.test_back_end.dto.PageResultDTO;
+import com.test_back_end.dto.PaymentDTO;
+import com.test_back_end.dto.PaymentDetailDTO;
+import com.test_back_end.dto.request.PaymentApprovalDTO;
+import com.test_back_end.dto.request.PaymentRequestDTO;
+import com.test_back_end.service.PaymentService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/payment")
+public class PaymentController {
+
+    @Autowired
+    private PaymentService paymentService;
+
+    @GetMapping
+    public ResponseEntity<PageResultDTO<PaymentDTO>> getPaymentList(
+            @RequestParam(name = "paymentNumber", defaultValue = "", required = false) String paymentNumber,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size,
+            @RequestParam(name = "sort", defaultValue = "paymentNumber") String sort,
+            @RequestParam(name = "direction", defaultValue = "asc") String direction) {
+        
+        return ResponseEntity.ok(paymentService.getPaymentsByPaymentNumber(paymentNumber, page, size, sort, direction));
+    }
+    
+    @GetMapping("/{secureId}")
+    public ResponseEntity<PaymentDetailDTO> getDetailPayment(@PathVariable String secureId) {
+        return ResponseEntity.ok(paymentService.getPaymentBySecureId(secureId));
+    }
+    
+    @PostMapping
+    public ResponseEntity<PaymentDTO> createPayment(@Valid @RequestBody PaymentRequestDTO paymentRequestDTO) {
+        PaymentDTO paymentDTO = paymentService.createPayment(paymentRequestDTO);
+        return new ResponseEntity<>(paymentDTO, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/update-status/{secureId}")
+    public ResponseEntity<PaymentDTO> updatePaymentStatus(@PathVariable String secureId,
+                                                          @Valid @RequestBody PaymentApprovalDTO approvalDTO) {
+        PaymentDTO paymentDTO = paymentService.updatePaymentStatus(secureId, approvalDTO);
+        return new ResponseEntity<>(paymentDTO, HttpStatus.OK);
+    }
+}

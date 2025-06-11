@@ -1,0 +1,29 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    hiraki:
+      connection-timeout: 600000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      maximum-pool-size: 10
+    url: jdbc:postgresql://localhost:5434/nostra_cinema
+    username: postgres
+    password: admin
+  jpa:
+    database: POSTGRESQL
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show_sql: true
+
+minio:
+  url: http://127.0.0.1:9000
+#  access-key: hZFlRUmGv7AbixjasmEh
+#  secret-key: mm8fSd7YECQlGPMBY5kycG9crTdWQqefwmyxcVXa
+  bucket-name: nostra-cinema
+  access-key: minioadmin
+  secret-key: minioadmin
