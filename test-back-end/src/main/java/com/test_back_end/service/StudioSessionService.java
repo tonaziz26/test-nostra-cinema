@@ -7,10 +7,7 @@ import com.test_back_end.repository.StudioSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,8 +27,11 @@ public class StudioSessionService {
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
 
+        LocalDateTime start = localDate.atStartOfDay();
+        LocalDateTime end = localDate.atTime(LocalTime.MAX);
+
         
-        List<StudioSessionSQL> sessions = studioSessionRepository.findSessionByCityCodeAndDateRange(cityCode, movieId, localDate);
+        List<StudioSessionSQL> sessions = studioSessionRepository.findSessionByCityCodeAndDateRange(cityCode, movieId, start, end);
         return mapToTheaterDtoSet(sessions, localDate);
     }
 
@@ -53,7 +53,7 @@ public class StudioSessionService {
                     session -> session.getTheaterId().equals(theaterDto.getId()))
                     .map(session -> {
                         StudioSessionDTO dto = new StudioSessionDTO();
-                        dto.setId(session.getStudioSessionId());
+                        dto.setId(session.getStudioSessionMovieId());
                         dto.setStartTime(session.getStartTime());
                         dto.setPrice(isWeekend(date) ? session.getPrice().add(session.getAdditionalPrice()) : session.getPrice());
                         dto.setStudioNumber(session.getStudioNumber());

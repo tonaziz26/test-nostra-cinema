@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -15,7 +16,7 @@ public interface StudioSessionRepository extends JpaRepository<StudioSession, Lo
 
     @Query("SELECT new com.test_back_end.entity.sql_response.StudioSessionSQL(" +
             "t.id, t.name, t.code, t.address, " +
-            "ss.id, ss.startTime, ss.price, ss.additionalPrice, s.number) " +
+            "sm.id, sm.sessionDate, ss.price, ss.additionalPrice, s.number) " +
             "FROM StudioSession ss " +
             "INNER JOIN SessionMovie sm on sm.studioSession.id = ss.id " +
             "INNER JOIN Movie m on m.id = sm.movie.id " +
@@ -23,11 +24,12 @@ public interface StudioSessionRepository extends JpaRepository<StudioSession, Lo
             "INNER JOIN Theater t on t.id = s.theater.id " +
             "INNER JOIN City c on c.id = t.city.id " +
             "WHERE m.id = :movieId " +
-            "AND :date BETWEEN m.startDate AND m.endDate " +
+            "AND sm.sessionDate BETWEEN :start AND :end " +
             "AND c.code = :cityCode")
     List<StudioSessionSQL> findSessionByCityCodeAndDateRange(
             @Param("cityCode") String cityCode,
             @Param("movieId") Long movieId,
-            @Param("date") LocalDate date);
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end);
 
 }
