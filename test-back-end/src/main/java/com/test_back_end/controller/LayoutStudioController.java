@@ -16,12 +16,11 @@ public class LayoutStudioController {
     private LayoutStudioService layoutStudioService;
 
 
-    @GetMapping("/studio-session")
+    @GetMapping("/session-movie")
     public ResponseEntity<List<LayoutStudioDTO>> getLayoutStudio(
-            @RequestParam(name = "studio_session_id") Long studioSessionId,
-            @RequestParam(name = "booking_date") Long bookingDate) {
+            @RequestParam(name = "session_movie_id") Long sessionMovieId) {
 
-        List<LayoutStudioDTO> layoutStudios = layoutStudioService.getLayoutStudio(studioSessionId, bookingDate);
+        List<LayoutStudioDTO> layoutStudios = layoutStudioService.getLayoutStudio(sessionMovieId);
 
         return ResponseEntity.ok(layoutStudios);
     }
