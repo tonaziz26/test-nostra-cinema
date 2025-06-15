@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,6 +21,7 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<PageResultDTO<PaymentDTO>> getPaymentList(
             @RequestParam(name = "paymentNumber", defaultValue = "", required = false) String paymentNumber,
             @RequestParam(name = "page", defaultValue = "0") int page,
@@ -42,6 +44,7 @@ public class PaymentController {
     }
 
     @PutMapping("/update-status/{secureId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<PaymentDTO> updatePaymentStatus(@PathVariable String secureId,
                                                           @Valid @RequestBody PaymentApprovalDTO approvalDTO) {
         PaymentDTO paymentDTO = paymentService.updatePaymentStatus(secureId, approvalDTO);
