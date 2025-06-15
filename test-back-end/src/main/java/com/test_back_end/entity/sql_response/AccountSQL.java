@@ -1,35 +1,25 @@
-package com.test_back_end.entity;
+package com.test_back_end.entity.sql_response;
 
-import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "account")
-public class Account {
+public class AccountSQL {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "secure_id", nullable = false)
-    private String secureId;
-
-    @Column(nullable = false)
     private String name;
-
-    @Column(name = "email", nullable = false)
     private String email;
-
-    @Column(nullable = false)
     private String password;
-
-    @Column(name = "expired_time")
     private LocalDateTime expiredTime;
+    private String roleName;
 
-    @JoinColumn(name = "role_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Role role;
+    public AccountSQL(Long id, String name, String email, String password, LocalDateTime expiredTime, String roleName) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.expiredTime = expiredTime;
+        this.roleName = roleName;
+    }
 
     public Long getId() {
         return id;
@@ -37,14 +27,6 @@ public class Account {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getSecureId() {
-        return secureId;
-    }
-
-    public void setSecureId(String secureId) {
-        this.secureId = secureId;
     }
 
     public String getName() {
@@ -79,11 +61,11 @@ public class Account {
         this.expiredTime = expiredTime;
     }
 
-    public Role getRole() {
-        return role;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 }
