@@ -8,6 +8,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.coyote.BadRequestException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -30,24 +31,20 @@ public class UsernamePasswordAuthFilter extends AbstractAuthenticationProcessing
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-        LoginRequestDto loginDto = objectMapper.readValue(request.getReader(), LoginRequestDto.class);
-        // filter manual validation c: username blank dkk
 
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDto.username(), loginDto.password());
+        LoginRequestDto loginDto = objectMapper.readValue(request.getReader(), LoginRequestDto.class);
+
+        if (loginDto.email() == null || loginDto.otp() == null) {
+            throw new BadRequestException("Email or OTP is missing");
+        }
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDto.email(), loginDto.otp());
 
         return this.getAuthenticationManager().authenticate(token);
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-//        SecurityContext ctx = SecurityContextHolder.createEmptyContext();
-//        ctx.setAuthentication(authResult);  // hasil autentikasi disimpan disini
-//        SecurityContextHolder.setContext(ctx); // disimpan di SecurityContext
-//        chain.doFilter(request, response);  // trsin ke filter selanjutnya
-
         this.successHandler.onAuthenticationSuccess(request, response, authResult);
-
-        // this ambil yg custom kalo super yang bawaanya
     }
 
     @Override

@@ -28,7 +28,6 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        // response success tercetak disini
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 

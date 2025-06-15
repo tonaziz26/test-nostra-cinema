@@ -42,7 +42,6 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
 
     public void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                          Authentication authResult) throws IOException, ServletException {
-        //kalo success, handle here
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authResult);
         SecurityContextHolder.setContext(context);
@@ -52,6 +51,7 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
 
     public void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                            AuthenticationException failed) throws IOException, ServletException {
+        SecurityContextHolder.clearContext();
         this.failureHandler.onAuthenticationFailure(request, response, failed);
     }
 }
