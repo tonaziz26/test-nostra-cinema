@@ -1,12 +1,15 @@
 package com.test_back_end.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.test_back_end.security.filter.EmailAuthenticationFilter;
 import com.test_back_end.security.filter.JwtAuthFilter;
+import com.test_back_end.security.hendler.EmailSuccessHandler;
 import com.test_back_end.security.hendler.FailedHandler;
 import com.test_back_end.security.hendler.SuccessHandler;
-import com.test_back_end.security.filter.UsernamePasswordAuthFilter;
+import com.test_back_end.security.filter.UsernameOtpAuthFilter;
+import com.test_back_end.security.provider.EmailAuthProvider;
 import com.test_back_end.security.provider.JwtAuthProvider;
-import com.test_back_end.security.provider.UsernamePasswordAuthProvider;
+import com.test_back_end.security.provider.UsernameOtpAuthProvider;
 import com.test_back_end.security.util.JwtTokenFactory;
 import com.test_back_end.security.util.SkipPathRequestMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,17 +34,21 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
-    private final static String AUTH_URL = "/v1/login";
-    private final static String AUTH_ALL_LOGIN_PATHS = "/v1/login/**";
+    private final static String AUTH_URL_OTP = "/v1/login/otp";
+    private final static String AUTH_URL_EMAIL = "/v1/login/email";
     private final static String API = "/api/**";
 
 
-    private final static List<String> PERMS = List.of(AUTH_URL, AUTH_ALL_LOGIN_PATHS);
+    private final static List<String> PERMS = List.of(AUTH_URL_OTP, AUTH_URL_EMAIL);
     private final static List<String> AUTH = List.of(API);
 
 
     @Autowired
-    private UsernamePasswordAuthProvider usernamePasswordAuthProvider;
+    private UsernameOtpAuthProvider usernameOtpAuthProvider;
+
+    @Autowired
+    private EmailAuthProvider emailAuthenticationProvider;
+
 
     @Autowired
     private JwtAuthProvider jwtAuthProvider;
@@ -56,9 +63,15 @@ public class SecurityConfig {
         return new SuccessHandler(objectMapper, jwtFactory);
     }
 
+    @Bean
+    public EmailSuccessHandler emailSuccessHandler(ObjectMapper objectMapper) {
+        return new EmailSuccessHandler(objectMapper);
+    }
+
     @Autowired
     void registerProvider(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(usernamePasswordAuthProvider)
+        auth.authenticationProvider(emailAuthenticationProvider)
+                .authenticationProvider(usernameOtpAuthProvider)
                 .authenticationProvider(jwtAuthProvider);
     }
 
@@ -68,13 +81,25 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UsernamePasswordAuthFilter usernamePasswordAuthenticationProcessingFilter(ObjectMapper objectMapper,
-                                                                           SuccessHandler successHandler,
-                                                                           FailedHandler failedHandler,
-                                                                           AuthenticationManager manager) {
+    public EmailAuthenticationFilter emailAuthenticationFilter(
+            AuthenticationManager authenticationManager,
+            EmailSuccessHandler successHandler,
+            AuthenticationFailureHandler failureHandler,
+            ObjectMapper objectMapper) {
+        EmailAuthenticationFilter emailAuthenticationFilter = new EmailAuthenticationFilter(AUTH_URL_EMAIL, successHandler, failureHandler,
+                objectMapper);
+        emailAuthenticationFilter.setAuthenticationManager(authenticationManager);
+        return emailAuthenticationFilter;
+    }
 
-        UsernamePasswordAuthFilter filter = new UsernamePasswordAuthFilter(
-                AUTH_URL, successHandler, failedHandler, objectMapper);
+    @Bean
+    public UsernameOtpAuthFilter usernamePasswordAuthenticationProcessingFilter(ObjectMapper objectMapper,
+                                                                                SuccessHandler successHandler,
+                                                                                FailedHandler failedHandler,
+                                                                                AuthenticationManager manager) {
+
+        UsernameOtpAuthFilter filter = new UsernameOtpAuthFilter(
+                AUTH_URL_OTP, successHandler, failedHandler, objectMapper);
         filter.setAuthenticationManager(manager);
 
         return filter;
@@ -84,11 +109,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
-                                                         UsernamePasswordAuthFilter usernamePasswordAuthProcessingFilter,
+                                                         UsernameOtpAuthFilter usernamePasswordAuthProcessingFilter,
                                                          JwtAuthFilter jwtAuthFilter) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers(AUTH_ALL_LOGIN_PATHS).permitAll()
-                .requestMatchers(AUTH_URL).permitAll()
+                .requestMatchers(AUTH_URL_EMAIL).permitAll()
+                .requestMatchers(AUTH_URL_OTP).permitAll()
                 .requestMatchers(API).authenticated()
             ).csrf(AbstractHttpConfigurer::disable)
             .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

@@ -48,7 +48,7 @@ public class AccountService {
         );
     }
 
-    public Boolean generateOTP(String email) throws Exception {
+    public void generateOTP(String email) throws Exception {
         logger.info("Generating OTP for email: " + email);
 
         Account account = accountRepository.findByEmail(email).orElse(new Account());
@@ -82,6 +82,5 @@ public class AccountService {
 
         Transport.send(message);
 
-        return Boolean.TRUE;
     }
 }
