@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -60,8 +61,11 @@ public class AccountService {
             account.setRole(roleRepository.findByName("ROLE_USER"));
         }
 
-        String uuid = UUID.randomUUID().toString();
-        account.setPassword(uuid.substring(uuid.length() - 6));
+
+        Random random = new Random();
+        int number = random.nextInt(1_000_000);
+
+        account.setPassword(String.valueOf(number));
 
         account.setExpiredTime(LocalDateTime.now().plusMinutes(5));
 

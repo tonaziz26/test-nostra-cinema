@@ -34,12 +34,12 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
-    private final static String AUTH_URL_OTP = "/v1/login/otp";
-    private final static String AUTH_URL_EMAIL = "/v1/login/email";
+    private final static String AUTH_URL_OTP = "/v1/otp";
+    private final static String AUTH_URL = "/v1/login";
     private final static String API = "/api/**";
 
 
-    private final static List<String> PERMS = List.of(AUTH_URL_OTP, AUTH_URL_EMAIL);
+    private final static List<String> PERMS = List.of(AUTH_URL_OTP, AUTH_URL);
     private final static List<String> AUTH = List.of(API);
 
 
@@ -86,7 +86,7 @@ public class SecurityConfig {
             EmailSuccessHandler successHandler,
             AuthenticationFailureHandler failureHandler,
             ObjectMapper objectMapper) {
-        EmailAuthenticationFilter emailAuthenticationFilter = new EmailAuthenticationFilter(AUTH_URL_EMAIL, successHandler, failureHandler,
+        EmailAuthenticationFilter emailAuthenticationFilter = new EmailAuthenticationFilter(AUTH_URL, successHandler, failureHandler,
                 objectMapper);
         emailAuthenticationFilter.setAuthenticationManager(authenticationManager);
         return emailAuthenticationFilter;
@@ -112,7 +112,7 @@ public class SecurityConfig {
                                                          UsernameOtpAuthFilter usernamePasswordAuthProcessingFilter,
                                                          JwtAuthFilter jwtAuthFilter) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers(AUTH_URL_EMAIL).permitAll()
+                .requestMatchers(AUTH_URL).permitAll()
                 .requestMatchers(AUTH_URL_OTP).permitAll()
                 .requestMatchers(API).authenticated()
             ).csrf(AbstractHttpConfigurer::disable)

@@ -19,20 +19,21 @@ public interface LayoutStudioRepository extends JpaRepository<LayoutStudio, Long
             "            inner join studio s on ls.studio_id = s.id  " +
             "            inner join studio_session ss on ss.studio_id = s.id  " +
             "            inner join session_movie sm on ss.id = sm.studio_session_id  " +
-            "            where sm.id = 353  " +
+            "            where sm.id = :sessionMovieId  " +
             ") a " +
             "left join ( " +
             "SELECT t.* FROM transaction t " +
             "            inner join payment p ON t.payment_id = p.id " +
-            "            where t.session_movie_id = :sessionMovieId " +
+            "            where p.session_movie_id = :sessionMovieId " +
             "            AND ((p.status = 'WAITING_FOR_PAYMENT' AND p.expired_time > NOW()) OR p.status = 'SUCCESS') " +
             ") t on t.chair_number = a.chair_number ", nativeQuery = true)
-    List<LayoutStudio> findByStudioSessionId(Long sessionMovieId);
+    List<LayoutStudio> findBySessionMovieId(Long sessionMovieId);
 
     @Query(value = "select ls.* from layout_studio ls " +
             "inner join studio s on ls.studio_id = s.id " +
             "inner join studio_session ss on ss.studio_id = s.id " +
-            "where ss.id = :studioSessionId " +
+            "inner join session_movie sm on ss.id = sm.studio_session_id  " +
+            "where sm.id = :sessionMovieId " +
             "and UPPER(ls.chair_number) = UPPER(:chairNumber) ", nativeQuery = true)
-    Optional<LayoutStudio> findByStudioSessionIdAndChairNumber(Long studioSessionId, String chairNumber);
+    Optional<LayoutStudio> findBySessionMovieIdAndChairNumber(Long sessionMovieId, String chairNumber);
 }

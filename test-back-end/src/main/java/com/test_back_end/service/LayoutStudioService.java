@@ -18,7 +18,7 @@ public class LayoutStudioService {
 
     public List<LayoutStudioDTO> getLayoutStudio(Long sessionMovieId) {
 
-        List<LayoutStudio> layoutStudios = layoutStudioRepository.findByStudioSessionId(sessionMovieId);
+        List<LayoutStudio> layoutStudios = layoutStudioRepository.findBySessionMovieId(sessionMovieId);
 
         return layoutStudios.stream()
                 .map(ls -> {

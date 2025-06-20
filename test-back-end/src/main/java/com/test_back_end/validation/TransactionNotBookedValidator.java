@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TransactionNotBookedValidator implements ConstraintValidator<TransactionNotBooked, PaymentRequestDTO> {
 
@@ -22,43 +23,27 @@ public class TransactionNotBookedValidator implements ConstraintValidator<Transa
     @Override
     public boolean isValid(PaymentRequestDTO paymentRequestDTO, ConstraintValidatorContext context) {
 
-        LocalDateTime bookingDate = Instant.ofEpochMilli(paymentRequestDTO.getBookingDateEpoch())
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
+        List<String> chairNumbers = paymentRequestDTO.getTransactions().stream()
+                .map(TransactionRequestDTO::getChairNumber)
+                .collect(Collectors.toList());
 
-        List<Transaction> existingTransactions = transactionRepository.findByPaymentBookingDateAndSessionId(bookingDate, paymentRequestDTO.getStudioSessionId());
-        
-        if (existingTransactions.isEmpty()) {
-            return true;
-        }
+        List<Transaction> existingTransactions = transactionRepository.findByPaymentBookingDateAndSessionId(paymentRequestDTO.getSessionMovieId(), chairNumbers);
+
+        if (existingTransactions.isEmpty()) return true;
 
         List<String> conflictingTransactions = new ArrayList<>();
-        
-        for (TransactionRequestDTO transactionDTO : paymentRequestDTO.getTransactions()) {
-            String chairNumber = transactionDTO.getChairNumber();
 
+        existingTransactions.forEach(transaction -> {
+            conflictingTransactions.add(transaction.getChairNumber());
+        });
 
-            boolean alreadyBooked = existingTransactions.stream()
-                    .anyMatch(transaction -> 
-                        transaction.getChairNumber().equalsIgnoreCase(chairNumber)
-                    );
-            
-            if (alreadyBooked) {
-                conflictingTransactions.add(chairNumber);
-            }
-        }
-        
-        if (!conflictingTransactions.isEmpty()) {
-            context.disableDefaultConstraintViolation();
-            
-            String errorMessage = "Chair(s) already booked: " + String.join(", ", conflictingTransactions);
-            
-            context.buildConstraintViolationWithTemplate(errorMessage)
-                   .addConstraintViolation();
-            
-            return false;
-        }
-        
-        return true;
+        context.disableDefaultConstraintViolation();
+
+        String errorMessage = "Chair(s) already booked: " + String.join(", ", conflictingTransactions);
+
+        context.buildConstraintViolationWithTemplate(errorMessage)
+                .addConstraintViolation();
+
+        return false;
     }
 }
