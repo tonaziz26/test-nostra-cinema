@@ -22,8 +22,7 @@ public class LayoutPositionValidator implements ConstraintValidator<LayoutPositi
     public boolean isValid(PaymentRequestDTO paymentRequestDTO, ConstraintValidatorContext context) {
 
         List<LayoutStudioDTO> layoutStudios = layoutStudioService.getLayoutStudio(
-                paymentRequestDTO.getStudioSessionId());
-
+                paymentRequestDTO.getSessionMovieId());
 
         paymentRequestDTO.getTransactions().sort(
                 Comparator.comparing(
@@ -31,8 +30,6 @@ public class LayoutPositionValidator implements ConstraintValidator<LayoutPositi
                         Comparator.nullsLast(Comparator.naturalOrder())
                 )
         );
-
-
 
         // validation left side
 

@@ -25,8 +25,8 @@ public class AvailableChairValidator implements ConstraintValidator<AvailableCha
         for (TransactionRequestDTO transaction : paymentRequestDTO.getTransactions()) {
             String chairNumber = transaction.getChairNumber();
             
-            Optional<LayoutStudio> layoutStudio = layoutStudioRepository.findByStudioSessionIdAndChairNumber(
-                    paymentRequestDTO.getStudioSessionId(), chairNumber);
+            Optional<LayoutStudio> layoutStudio = layoutStudioRepository.findBySessionMovieIdAndChairNumber(
+                    paymentRequestDTO.getSessionMovieId(), chairNumber);
             
             if (layoutStudio.isEmpty()) {
                 invalidChairs.add(chairNumber);

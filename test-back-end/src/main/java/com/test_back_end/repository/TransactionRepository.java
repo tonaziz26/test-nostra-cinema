@@ -14,12 +14,12 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     @Query(value = "SELECT t.* FROM transaction t " +
             "inner join payment p ON t.payment_id = p.id " +
-            "WHERE p.booking_date = :bookingDate " +
-            "AND t.studio_session_id = :studioSessionId " +
-            "AND ((p.status = 'WAITING_FOR_PAYMENT' AND p.expired_time > NOW()) OR p.status = 'SUCCESS')",
+            "WHERE p.session_movie_id = :sessionMovieId " +
+            "AND ((p.status = 'WAITING_FOR_PAYMENT' AND p.expired_time > NOW()) OR p.status = 'SUCCESS') " +
+            "AND t.chair_number in :chairNumbers " ,
             nativeQuery = true)
     List<Transaction> findByPaymentBookingDateAndSessionId(
-            @Param("bookingDate") LocalDateTime bookingDate,
-            @Param("studioSessionId") Long studioSessionId);
+            @Param("sessionMovieId") Long sessionMovieId,
+            @Param("chairNumbers") List<String> chairNumbers);
 
 }

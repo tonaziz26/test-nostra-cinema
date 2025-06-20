@@ -38,6 +38,10 @@ public class Payment {
     @OneToMany(mappedBy = "payment")
     private Set<Transaction> transactions;
 
+    @JoinColumn(name = "session_movie_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private SessionMovie sessionMovie;
+
 
     public Long getId() {
         return id;
@@ -101,6 +105,14 @@ public class Payment {
 
     public void setTransactions(Set<Transaction> transactions) {
         this.transactions = transactions;
+    }
+
+    public SessionMovie getSessionMovie() {
+        return sessionMovie;
+    }
+
+    public void setSessionMovie(SessionMovie sessionMovie) {
+        this.sessionMovie = sessionMovie;
     }
 }
 

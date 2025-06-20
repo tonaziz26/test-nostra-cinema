@@ -1,7 +1,6 @@
 package com.test_back_end.dto.request;
 
 import com.test_back_end.validation.AvailableChair;
-import com.test_back_end.validation.FutureOrTodayEpoch;
 import com.test_back_end.validation.LayoutPosition;
 import com.test_back_end.validation.TransactionNotBooked;
 import jakarta.validation.Valid;
@@ -16,25 +15,13 @@ import java.util.List;
 @LayoutPosition
 public class PaymentRequestDTO {
     
-    @NotNull(message = "Booking date is required")
-    @FutureOrTodayEpoch
-    private Long bookingDateEpoch;
-    
     private BigDecimal totalPrice;
 
-    @NotNull(message = "Studio session id is required")
-    private Long studioSessionId;
+    @NotNull(message = "session movie id is required")
+    private Long sessionMovieId;
 
     @NotEmpty(message = "Transactions cannot be empty")
     private List<@Valid TransactionRequestDTO> transactions;
-
-    public Long getBookingDateEpoch() {
-        return bookingDateEpoch;
-    }
-
-    public void setBookingDateEpoch(Long bookingDateEpoch) {
-        this.bookingDateEpoch = bookingDateEpoch;
-    }
 
     public BigDecimal getTotalPrice() {
         return totalPrice;
@@ -52,11 +39,11 @@ public class PaymentRequestDTO {
         this.transactions = transactions;
     }
 
-    public Long getStudioSessionId() {
-        return studioSessionId;
+    public Long getSessionMovieId() {
+        return sessionMovieId;
     }
 
-    public void setStudioSessionId(Long studioSessionId) {
-        this.studioSessionId = studioSessionId;
+    public void setSessionMovieId(Long sessionMovieId) {
+        this.sessionMovieId = sessionMovieId;
     }
 }

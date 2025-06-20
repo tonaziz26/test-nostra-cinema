@@ -9,10 +9,7 @@ import com.test_back_end.dto.request.PaymentRequestDTO;
 import com.test_back_end.dto.request.TransactionRequestDTO;
 import com.test_back_end.entity.*;
 import com.test_back_end.enums.PaymentStatus;
-import com.test_back_end.repository.AccountRepository;
-import com.test_back_end.repository.PaymentRepository;
-import com.test_back_end.repository.StudioSessionRepository;
-import com.test_back_end.repository.TransactionRepository;
+import com.test_back_end.repository.*;
 import com.test_back_end.util.PaginationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,12 +36,14 @@ public class PaymentService {
     
     @Autowired
     private AccountRepository accountRepository;
-    
+
     @Autowired
     private StudioSessionRepository studioSessionRepository;
     
     @Autowired
     private TransactionRepository transactionRepository;
+    @Autowired
+    private SessionMovieRepository sessionMovieRepository;
 
     public PageResultDTO<PaymentDTO> getPaymentsByPaymentNumber(String paymentNumber, int page, int limit, String sort, String direction) {
         Sort.Direction dir = PaginationUtil.getSortDirection(direction);
@@ -94,20 +93,16 @@ public class PaymentService {
         payment.setSecureId(UUID.randomUUID().toString());
         payment.setStatus(PaymentStatus.WAITING_FOR_PAYMENT);
         
-        LocalDateTime bookingDate = Instant.ofEpochMilli(paymentRequestDTO.getBookingDateEpoch())
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
-        payment.setBookingDate(bookingDate);
-        
-        payment.setExpiredTime(bookingDate.minusMinutes(10));
-        
-        BigDecimal totalPrice = paymentRequestDTO.getTransactions().stream()
-                .map(TransactionRequestDTO::getPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        payment.setTotalPrice(totalPrice);
 
-        StudioSession studioSession = studioSessionRepository.findById(paymentRequestDTO.getStudioSessionId())
-                .orElseThrow(() -> new RuntimeException("Studio Session not found with ID: " + paymentRequestDTO.getStudioSessionId()));
+        payment.setTotalPrice(paymentRequestDTO.getTotalPrice());
+
+        SessionMovie sessionMovie = sessionMovieRepository.findById(paymentRequestDTO.getSessionMovieId())
+                .orElseThrow(() -> new RuntimeException("Studio Session not found with ID: " + paymentRequestDTO.getSessionMovieId()));
+
+        payment.setSessionMovie(sessionMovie);
+
+        payment.setBookingDate(sessionMovie.getSessionDate());
+        payment.setExpiredTime(sessionMovie.getSessionDate().minusMinutes(10));
 
         payment.setPaymentNumber(generatePaymentNumber(payment.getSecureId()) );
 
@@ -123,8 +118,7 @@ public class PaymentService {
             transaction.setAccount(account);
             
 
-            transaction.setStudioSession(studioSession);
-            
+
             transaction.setChairNumber(transactionDTO.getChairNumber());
             transaction.setPrice(transactionDTO.getPrice());
             transaction.setPayment(payment);
