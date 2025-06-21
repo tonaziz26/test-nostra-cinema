@@ -39,13 +39,19 @@ public class SecurityConfig {
     private final static String CITY = "/api/city/**";
     private final static String MOVIE = "/api/movie/**";
     private final static String SESSION = "/api/session/**";
+    private final static String SWAGGER_UI = "/swagger-ui/**";
+    private final static String SWAGGER_API_DOCS = "/v3/api-docs/**";
+    private final static String SWAGGER_CONFIG = "/configuration/**";
+    private final static String WEBJARS = "/webjars/**";
 
     private final static String ACCOUNT = "/api/account/**";
     private final static String LAYOUT_STUDIO = "/api/layout-studio/**";
     private final static String PAYMENT = "/api/payment/**";
+    private final static String MOVIE_ADMIN = "/api/movie-admin/**";
 
-    private final static List<String> PERMS = List.of(AUTH_URL_OTP, AUTH_URL, CITY, MOVIE, SESSION);
-    private final static List<String> AUTHENTICATION = List.of(ACCOUNT, LAYOUT_STUDIO, PAYMENT);
+    private final static List<String> PERMS = List.of(AUTH_URL_OTP, AUTH_URL, CITY, MOVIE, SESSION, 
+                                               SWAGGER_UI, SWAGGER_API_DOCS, SWAGGER_CONFIG, WEBJARS);
+    private final static List<String> AUTHENTICATION = List.of(ACCOUNT, LAYOUT_STUDIO, PAYMENT, MOVIE_ADMIN);
 
 
     @Autowired

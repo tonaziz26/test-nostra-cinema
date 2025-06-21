@@ -2,6 +2,7 @@ package com.test_back_end.controller;
 
 import com.test_back_end.dto.LayoutStudioDTO;
 import com.test_back_end.service.LayoutStudioService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/layout-studio")
+@SecurityRequirement(name = "Bearer Authentication")
 public class LayoutStudioController {
 
     @Autowired
