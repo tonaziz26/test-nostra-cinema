@@ -13,6 +13,7 @@ import com.test_back_end.util.PaginationUtil;
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.http.Method;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -122,10 +123,11 @@ public class MovieService {
     }
 
     private MovieDTO toMovieDTO(Movie movie) {
+        String url = StringUtils.isEmpty(movie.getUrlImage()) ? "" : minioProperties.getUrl() + "/" + minioProperties.getBucketName() + movie.getUrlImage();
         return new MovieDTO(
                 movie.getId(),
                 movie.getName(),
-                minioProperties.getUrl() + "/" + minioProperties.getBucketName() + movie.getUrlImage()
+                url
         );
     }
 }

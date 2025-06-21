@@ -6,6 +6,7 @@ import com.test_back_end.dto.PaymentDetailDTO;
 import com.test_back_end.dto.request.PaymentApprovalDTO;
 import com.test_back_end.dto.request.PaymentRequestDTO;
 import com.test_back_end.service.PaymentService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/payment")
+@SecurityRequirement(name = "Bearer Authentication")
 public class PaymentController {
 
     @Autowired
