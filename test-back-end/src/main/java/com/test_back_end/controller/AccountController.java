@@ -4,6 +4,7 @@ import com.test_back_end.dto.AccountResponseDTO;
 import com.test_back_end.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,6 +18,7 @@ public class AccountController {
     }
 
     @GetMapping("/{secureId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<AccountResponseDTO> getDetailAccount(@PathVariable String secureId) {
         AccountResponseDTO accountResponse = accountService.getAccountDetailBySecureId(secureId);
         return ResponseEntity.ok(accountResponse);

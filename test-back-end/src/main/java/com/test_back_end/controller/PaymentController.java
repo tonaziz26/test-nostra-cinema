@@ -33,11 +33,13 @@ public class PaymentController {
     }
     
     @GetMapping("/{secureId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public ResponseEntity<PaymentDetailDTO> getDetailPayment(@PathVariable String secureId) {
         return ResponseEntity.ok(paymentService.getPaymentBySecureId(secureId));
     }
     
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<PaymentDTO> createPayment(@Valid @RequestBody PaymentRequestDTO paymentRequestDTO) {
         PaymentDTO paymentDTO = paymentService.createPayment(paymentRequestDTO);
         return new ResponseEntity<>(paymentDTO, HttpStatus.CREATED);
