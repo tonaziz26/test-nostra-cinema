@@ -8,9 +8,9 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.minio.MinioClient;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 
 import jakarta.mail.Authenticator;
 import jakarta.mail.PasswordAuthentication;
@@ -22,6 +22,27 @@ import java.util.Properties;
 
 @Configuration
 public class AppConfig {
+
+    @Value("${email.username}")
+    private String username;
+
+    @Value("${email.password}")
+    private String password;
+
+    @Value("${email.smtp.auth}")
+    private String smtpAuth;
+
+    @Value("${email.smtp.starttls.enable}")
+    private String starttlsEnable;
+
+    @Value("${email.smtp.host}")
+    private String smtpHost;
+
+    @Value("${email.smtp.port}")
+    private String smtpPort;
+
+    @Value("${email.smtp.ssl.trust}")
+    private String smtpSslTrust;
 
     @Bean
     public SecretKey secretKey() {
@@ -54,17 +75,17 @@ public class AppConfig {
     @Bean
     public Properties mainProperties() {
         Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "sandbox.smtp.mailtrap.io");
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.ssl.trust", "sandbox.smtp.mailtrap.io");
+        props.put("mail.smtp.auth", smtpAuth);
+        props.put("mail.smtp.starttls.enable", starttlsEnable);
+        props.put("mail.smtp.host", smtpHost);
+        props.put("mail.smtp.port", smtpPort);
+        props.put("mail.smtp.ssl.trust", smtpSslTrust);
         return props;
     }
 
     @Bean
     public PasswordAuthentication passwordAuthentication() {
-        return new PasswordAuthentication("6d7b0805389bf6", "2720e0195a02da");
+        return new PasswordAuthentication(username, password);
     }
 
     @Bean

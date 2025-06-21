@@ -27,3 +27,19 @@ minio:
   bucket-name: nostra-cinema
   access-key: minioadmin
   secret-key: minioadmin
+
+
+email:
+  sender: admin-nostracinema@gmail.com
+  subject: OTP code Nostra Cinema
+  template: "This is the OTP code nostra Cinema: %s Please do not share this code with anyone."
+  username: 6d7b0805389bf6
+  password: 2720e0195a02da
+  smtp:
+    auth: true
+    starttls:
+      enable: true
+    host: sandbox.smtp.mailtrap.io
+    port: 587
+    ssl:
+      trust: sandbox.smtp.mailtrap.io
