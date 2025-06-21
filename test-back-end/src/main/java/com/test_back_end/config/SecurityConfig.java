@@ -36,11 +36,16 @@ public class SecurityConfig {
 
     private final static String AUTH_URL_OTP = "/v1/otp";
     private final static String AUTH_URL = "/v1/login";
-    private final static String API = "/api/**";
+    private final static String CITY = "/api/city/**";
+    private final static String MOVIE = "/api/movie/**";
+    private final static String SESSION = "/api/session/**";
 
+    private final static String ACCOUNT = "/api/account/**";
+    private final static String LAYOUT_STUDIO = "/api/layout-studio/**";
+    private final static String PAYMENT = "/api/payment/**";
 
-    private final static List<String> PERMS = List.of(AUTH_URL_OTP, AUTH_URL);
-    private final static List<String> AUTH = List.of(API);
+    private final static List<String> PERMS = List.of(AUTH_URL_OTP, AUTH_URL, CITY, MOVIE, SESSION);
+    private final static List<String> AUTHENTICATION = List.of(ACCOUNT, LAYOUT_STUDIO, PAYMENT);
 
 
     @Autowired
@@ -69,7 +74,7 @@ public class SecurityConfig {
     }
 
     @Autowired
-    void registerProvider(AuthenticationManagerBuilder auth) throws Exception {
+    void registerProvider(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(emailAuthenticationProvider)
                 .authenticationProvider(usernameOtpAuthProvider)
                 .authenticationProvider(jwtAuthProvider);
@@ -112,9 +117,8 @@ public class SecurityConfig {
                                                          UsernameOtpAuthFilter usernamePasswordAuthProcessingFilter,
                                                          JwtAuthFilter jwtAuthFilter) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers(AUTH_URL).permitAll()
-                .requestMatchers(AUTH_URL_OTP).permitAll()
-                .requestMatchers(API).authenticated()
+                .requestMatchers(PERMS.toArray(new String[0])).permitAll()
+                .requestMatchers(AUTHENTICATION.toArray(new String[0])).authenticated()
             ).csrf(AbstractHttpConfigurer::disable)
             .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
@@ -126,7 +130,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthFilter jwtAuthFilter(AuthenticationFailureHandler failureHandler, AuthenticationManager authManager) {
-        SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(PERMS, AUTH);
+        SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(PERMS, AUTHENTICATION);
         JwtAuthFilter filter = new JwtAuthFilter(matcher, failureHandler);
         filter.setAuthenticationManager(authManager);
         return filter;

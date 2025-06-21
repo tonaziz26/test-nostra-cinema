@@ -4,6 +4,7 @@ import com.test_back_end.dto.LayoutStudioDTO;
 import com.test_back_end.service.LayoutStudioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class LayoutStudioController {
 
 
     @GetMapping("/session-movie")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<LayoutStudioDTO>> getLayoutStudio(
             @RequestParam(name = "session_movie_id") Long sessionMovieId) {
 
