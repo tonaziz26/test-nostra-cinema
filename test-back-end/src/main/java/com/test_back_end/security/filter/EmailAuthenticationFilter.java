@@ -1,7 +1,7 @@
 package com.test_back_end.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.test_back_end.security.LoginRequestDto;
+import com.test_back_end.security.EmailRequestDTO;
 import com.test_back_end.security.hendler.EmailSuccessHandler;
 import com.test_back_end.security.model.EmailAuthToken;
 import jakarta.servlet.FilterChain;
@@ -43,7 +43,7 @@ public class EmailAuthenticationFilter extends AbstractAuthenticationProcessingF
             BufferedReader reader = request.getReader();
             String requestBody = reader.lines().collect(Collectors.joining());
 
-            LoginRequestDto loginRequest = objectMapper.readValue(requestBody, LoginRequestDto.class);
+            EmailRequestDTO loginRequest = objectMapper.readValue(requestBody, EmailRequestDTO.class);
 
             if (loginRequest.email() == null || loginRequest.email().trim().isEmpty()) {
                 throw new BadCredentialsException("Email is required");

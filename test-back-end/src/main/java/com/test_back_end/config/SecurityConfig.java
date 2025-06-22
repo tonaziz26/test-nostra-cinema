@@ -1,18 +1,22 @@
 package com.test_back_end.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.test_back_end.repository.AccountRepository;
+import com.test_back_end.repository.UserLoginRepository;
 import com.test_back_end.security.filter.EmailAuthenticationFilter;
 import com.test_back_end.security.filter.JwtAuthFilter;
 import com.test_back_end.security.hendler.EmailSuccessHandler;
 import com.test_back_end.security.hendler.FailedHandler;
+import com.test_back_end.security.hendler.FailedOtpHandler;
 import com.test_back_end.security.hendler.SuccessHandler;
-import com.test_back_end.security.filter.UsernameOtpAuthFilter;
+import com.test_back_end.security.filter.SessionIdOtpAuthFilter;
 import com.test_back_end.security.provider.EmailAuthProvider;
 import com.test_back_end.security.provider.JwtAuthProvider;
-import com.test_back_end.security.provider.UsernameOtpAuthProvider;
+import com.test_back_end.security.provider.SessionIdOtpAuthProvider;
 import com.test_back_end.security.util.JwtTokenFactory;
 import com.test_back_end.security.util.SkipPathRequestMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -49,13 +53,13 @@ public class SecurityConfig {
     private final static String PAYMENT = "/api/payment/**";
     private final static String MOVIE_ADMIN = "/api/movie-admin/**";
 
-    private final static List<String> PERMS = List.of(AUTH_URL_OTP, AUTH_URL, CITY, MOVIE, SESSION, 
+    private final static List<String> PERMS = List.of(AUTH_URL_OTP, AUTH_URL, CITY, MOVIE, SESSION,
                                                SWAGGER_UI, SWAGGER_API_DOCS, SWAGGER_CONFIG, WEBJARS);
     private final static List<String> AUTHENTICATION = List.of(ACCOUNT, LAYOUT_STUDIO, PAYMENT, MOVIE_ADMIN);
 
 
     @Autowired
-    private UsernameOtpAuthProvider usernameOtpAuthProvider;
+    private SessionIdOtpAuthProvider usernameOtpAuthProvider;
 
     @Autowired
     private EmailAuthProvider emailAuthenticationProvider;
@@ -67,6 +71,12 @@ public class SecurityConfig {
     @Bean
     public FailedHandler usernamePasswordAuthenticationFailureHandler(ObjectMapper objectMapper) {
         return new FailedHandler(objectMapper);
+    }
+
+    @Bean
+    @Qualifier("usernamePasswordAuthenticationFailureHandler")
+    public AuthenticationFailureHandler authenticationFailureHandler(FailedHandler failedHandler) {
+        return failedHandler;
     }
 
     @Bean
@@ -95,7 +105,7 @@ public class SecurityConfig {
     public EmailAuthenticationFilter emailAuthenticationFilter(
             AuthenticationManager authenticationManager,
             EmailSuccessHandler successHandler,
-            AuthenticationFailureHandler failureHandler,
+            @Qualifier("usernamePasswordAuthenticationFailureHandler") AuthenticationFailureHandler failureHandler,
             ObjectMapper objectMapper) {
         EmailAuthenticationFilter emailAuthenticationFilter = new EmailAuthenticationFilter(AUTH_URL, successHandler, failureHandler,
                 objectMapper);
@@ -104,13 +114,15 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UsernameOtpAuthFilter usernamePasswordAuthenticationProcessingFilter(ObjectMapper objectMapper,
-                                                                                SuccessHandler successHandler,
-                                                                                FailedHandler failedHandler,
-                                                                                AuthenticationManager manager) {
+    public SessionIdOtpAuthFilter usernamePasswordAuthenticationProcessingFilter(ObjectMapper objectMapper,
+                                                                                 SuccessHandler successHandler,
+                                                                                 FailedOtpHandler failedHandler,
+                                                                                 UserLoginRepository userLoginRepository,
+                                                                                 AccountRepository accountRepository,
+                                                                                 AuthenticationManager manager) {
 
-        UsernameOtpAuthFilter filter = new UsernameOtpAuthFilter(
-                AUTH_URL_OTP, successHandler, failedHandler, objectMapper);
+        SessionIdOtpAuthFilter filter = new SessionIdOtpAuthFilter(
+                AUTH_URL_OTP, successHandler, failedHandler, objectMapper, userLoginRepository, accountRepository);
         filter.setAuthenticationManager(manager);
 
         return filter;
@@ -120,7 +132,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
-                                                         UsernameOtpAuthFilter usernamePasswordAuthProcessingFilter,
+                                                         SessionIdOtpAuthFilter usernamePasswordAuthProcessingFilter,
                                                          JwtAuthFilter jwtAuthFilter) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(PERMS.toArray(new String[0])).permitAll()
@@ -135,13 +147,15 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtAuthFilter jwtAuthFilter(AuthenticationFailureHandler failureHandler, AuthenticationManager authManager) {
+    public JwtAuthFilter jwtAuthFilter(@Qualifier("usernamePasswordAuthenticationFailureHandler") AuthenticationFailureHandler failureHandler, AuthenticationManager authManager) {
         SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(PERMS, AUTHENTICATION);
         JwtAuthFilter filter = new JwtAuthFilter(matcher, failureHandler);
         filter.setAuthenticationManager(authManager);
         return filter;
     }
 
-
-
+    @Bean
+    public FailedOtpHandler failedOtpHandler(ObjectMapper objectMapper, AccountRepository accountRepository) {
+        return new FailedOtpHandler(objectMapper, accountRepository);
+    }
 }

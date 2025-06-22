@@ -18,8 +18,6 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
         setAuthenticated(false);
     }
 
-    // sudah terauthentikasi
-
     public JwtAuthenticationToken(UserDetails userDetails,
                                   Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
