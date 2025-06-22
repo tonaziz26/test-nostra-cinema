@@ -4,6 +4,7 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 
 public class EmailAuthToken extends AbstractAuthenticationToken {
     private final String email;
+    private String sessionId;
 
     public EmailAuthToken(String email) {
         super(null);
@@ -26,4 +27,13 @@ public class EmailAuthToken extends AbstractAuthenticationToken {
     public String getEmail() {
         return email;
     }
-} 
+
+    public String getSessionId() {
+        return sessionId;
+    }
+    
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
+}

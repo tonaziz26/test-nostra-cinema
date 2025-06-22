@@ -1,24 +1,29 @@
 package com.test_back_end.entity.sql_response;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.time.LocalDateTime;
 
-public class AccountSQL {
+public class AccountSQL extends UsernamePasswordAuthenticationToken {
 
     private Long id;
     private String name;
-    private String email;
-    private String password;
+    private String sessionId;
+    private String otp;
     private LocalDateTime expiredTime;
     private String roleName;
+    private Boolean used;
 
-    public AccountSQL(Long id, String name, String email, String password, LocalDateTime expiredTime, String roleName) {
+    public AccountSQL(Long id, String name, String sessionId, String otp, LocalDateTime expiredTime, String roleName, Boolean used) {
+        super(sessionId, otp);
         this.id = id;
         this.name = name;
-        this.email = email;
-        this.password = password;
+        this.sessionId = sessionId;
+        this.otp = otp;
         this.expiredTime = expiredTime;
         this.roleName = roleName;
+        this.used = used;
+        this.setAuthenticated(false);
     }
 
     public Long getId() {
@@ -37,20 +42,20 @@ public class AccountSQL {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public String getSessionId() {
+        return sessionId;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
-    public String getPassword() {
-        return password;
+    public String getOtp() {
+        return otp;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setOtp(String otp) {
+        this.otp = otp;
     }
 
     public LocalDateTime getExpiredTime() {
@@ -67,5 +72,23 @@ public class AccountSQL {
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+
+    public Boolean getUsed() {
+        return used;
+    }
+
+    public void setUsed(Boolean used) {
+        this.used = used;
+    }
+
+    @Override
+    public Object getCredentials() {
+        return otp;
+    }
+
+    @Override
+    public Object getPrincipal() {
+        return sessionId;
     }
 }

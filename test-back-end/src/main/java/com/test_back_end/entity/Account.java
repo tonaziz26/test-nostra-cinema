@@ -21,15 +21,15 @@ public class Account {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(nullable = false)
-    private String password;
-
-    @Column(name = "expired_time")
-    private LocalDateTime expiredTime;
-
     @JoinColumn(name = "role_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Role role;
+
+    @Column(name = "login_number")
+    private Integer loginNumber;
+
+    @Column(name = "block_until")
+    private LocalDateTime blockUntil;
 
     public Long getId() {
         return id;
@@ -63,27 +63,27 @@ public class Account {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public LocalDateTime getExpiredTime() {
-        return expiredTime;
-    }
-
-    public void setExpiredTime(LocalDateTime expiredTime) {
-        this.expiredTime = expiredTime;
-    }
-
     public Role getRole() {
         return role;
     }
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Integer getLoginNumber() {
+        return loginNumber;
+    }
+
+    public void setLoginNumber(Integer loginNumber) {
+        this.loginNumber = loginNumber;
+    }
+
+    public LocalDateTime getBlockUntil() {
+        return blockUntil;
+    }
+
+    public void setBlockUntil(LocalDateTime blockUntil) {
+        this.blockUntil = blockUntil;
     }
 }
