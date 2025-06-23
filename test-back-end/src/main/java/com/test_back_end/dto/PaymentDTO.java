@@ -13,6 +13,7 @@ public class PaymentDTO {
     private LocalDateTime expiredTime;
     private LocalDateTime bookingDate;
     private BigDecimal totalPrice;
+    private String accountName;
 
 
     public String getSecureId() {
@@ -61,5 +62,13 @@ public class PaymentDTO {
 
     public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
     }
 }

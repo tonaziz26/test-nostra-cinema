@@ -8,6 +8,7 @@ import com.test_back_end.dto.request.PaymentApprovalDTO;
 import com.test_back_end.dto.request.PaymentRequestDTO;
 import com.test_back_end.dto.request.TransactionRequestDTO;
 import com.test_back_end.entity.*;
+import com.test_back_end.entity.sql_response.PaymentSql;
 import com.test_back_end.enums.PaymentStatus;
 import com.test_back_end.repository.*;
 import com.test_back_end.util.PaginationUtil;
@@ -59,8 +60,9 @@ public class PaymentService {
     }
 
     public PaymentDetailDTO getPaymentBySecureId(String secureId) {
-        Payment payment = paymentRepository.findBySecureId(secureId)
-                .orElseThrow(() -> new RuntimeException("Payment not found with secureId: " + secureId));
+        List<PaymentSql> paymentSqlList = paymentRepository.findByPaymentId(secureId);
+
+        PaymentSql payment = paymentSqlList.get(0);
 
         PaymentDetailDTO dto = new PaymentDetailDTO();
         dto.setSecureId(payment.getSecureId());
@@ -68,17 +70,19 @@ public class PaymentService {
         dto.setStatus(payment.getStatus());
 
         if (payment.getStatus().equals(PaymentStatus.WAITING_FOR_PAYMENT) && LocalDateTime.now().isAfter(payment.getExpiredTime())) {
-            payment.setStatus(PaymentStatus.EXPIRED);
+            dto.setStatus(PaymentStatus.EXPIRED);
         }
         dto.setExpiredTime(payment.getExpiredTime());
         dto.setBookingDate(payment.getBookingDate());
         dto.setTotalPrice(payment.getTotalPrice());
+        dto.setStudio(payment.getStudioNumber());
+        dto.setLocation(payment.getLocation());
+        dto.setAccountName(payment.getUserName());
 
-        dto.setTransactions(payment.getTransactions().stream()
+        dto.setTransactions(paymentSqlList.stream()
                 .map(transaction -> {
                     TransactionDTO transactionDTO = new TransactionDTO();
-                    transactionDTO.setSecureId(transaction.getSecureId());
-                    transactionDTO.setAccountName(transaction.getAccount().getName());
+                    transactionDTO.setSecureId(transaction.getTransactionId());
                     transactionDTO.setChairNumber(transaction.getChairNumber());
                     return transactionDTO;
                 })
@@ -165,7 +169,7 @@ public class PaymentService {
         dto.setStatus(payment.getStatus());
 
         if (payment.getStatus().equals(PaymentStatus.WAITING_FOR_PAYMENT) && LocalDateTime.now().isAfter(payment.getExpiredTime())) {
-            payment.setStatus(PaymentStatus.EXPIRED);
+            dto.setStatus(PaymentStatus.EXPIRED);
         }
         dto.setExpiredTime(payment.getExpiredTime());
         dto.setBookingDate(payment.getBookingDate());
