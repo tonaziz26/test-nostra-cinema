@@ -4,9 +4,8 @@ import java.util.List;
 
 public class PaymentDetailDTO extends PaymentDTO {
 
-    //coming soon
-    //private String location;
-    //private String studio;
+    private String location;
+    private String studio;
 
     private List<TransactionDTO> transactions;
 
@@ -16,5 +15,21 @@ public class PaymentDetailDTO extends PaymentDTO {
 
     public void setTransactions(List<TransactionDTO> transactions) {
         this.transactions = transactions;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getStudio() {
+        return studio;
+    }
+
+    public void setStudio(String studio) {
+        this.studio = studio;
     }
 }
