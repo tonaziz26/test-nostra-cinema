@@ -22,7 +22,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     
     @Query("SELECT new com.test_back_end.entity.sql_response.PaymentSql(" +
             "p.secureId, p.paymentNumber, p.status, p.expiredTime, p.bookingDate, p.totalPrice, " +
-            "CONCAT(th.name, ' - ', c.name), s.number, t.secureId, t.chairNumber, a.name) " +
+            "CONCAT(th.name, ' - ', c.name), s.number, t.secureId, t.chairNumber, a.name, p.paymentDate) " +
             "FROM Payment p " +
             "INNER JOIN Transaction t ON t.payment.id = p.id " +
             "INNER JOIN Account a ON a.id = t.account.id " +

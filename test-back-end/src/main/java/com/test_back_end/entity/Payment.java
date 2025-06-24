@@ -32,6 +32,9 @@ public class Payment {
     @Column(name = "booking_date", nullable = false)
     private LocalDateTime bookingDate;
 
+    @Column(name = "payment_date")
+    private LocalDateTime paymentDate;
+
     @Column(name = "total_price")
     private BigDecimal totalPrice;
 
@@ -113,6 +116,14 @@ public class Payment {
 
     public void setSessionMovie(SessionMovie sessionMovie) {
         this.sessionMovie = sessionMovie;
+    }
+
+    public LocalDateTime getPaymentDate() {
+        return paymentDate;
+    }
+
+    public void setPaymentDate(LocalDateTime paymentDate) {
+        this.paymentDate = paymentDate;
     }
 }
 

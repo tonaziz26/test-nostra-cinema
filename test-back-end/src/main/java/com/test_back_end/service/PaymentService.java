@@ -77,6 +77,7 @@ public class PaymentService {
         dto.setTotalPrice(payment.getTotalPrice());
         dto.setStudio(payment.getStudioNumber());
         dto.setLocation(payment.getLocation());
+        dto.setPaymentDate(payment.getPaymentDate());
         dto.setAccountName(payment.getUserName());
 
         dto.setTransactions(paymentSqlList.stream()
@@ -135,7 +136,6 @@ public class PaymentService {
         return convertToDTO(payment);
     }
 
-    @Transactional
     public PaymentDTO updatePaymentStatus(String secureId, PaymentApprovalDTO approvalDTO) {
         Payment payment = paymentRepository.findBySecureId(secureId)
                 .orElseThrow(() -> new RuntimeException("Payment not found with secureId: " + secureId));
@@ -149,6 +149,10 @@ public class PaymentService {
         }
 
         payment.setStatus(approvalDTO.getStatus());
+        if (approvalDTO.getStatus().equals(PaymentStatus.SUCCESS)) {
+            payment.setPaymentDate(LocalDateTime.now());
+        }
+        paymentRepository.save(payment);
 
         return convertToDTO(payment);
     }
@@ -174,6 +178,7 @@ public class PaymentService {
         dto.setExpiredTime(payment.getExpiredTime());
         dto.setBookingDate(payment.getBookingDate());
         dto.setTotalPrice(payment.getTotalPrice());
+        dto.setPaymentDate(payment.getPaymentDate());
         return dto;
     }
 }
