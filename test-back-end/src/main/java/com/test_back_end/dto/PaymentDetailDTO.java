@@ -6,6 +6,7 @@ public class PaymentDetailDTO extends PaymentDTO {
 
     private String location;
     private String studio;
+    private String accountName;
 
     private List<TransactionDTO> transactions;
 
@@ -31,5 +32,13 @@ public class PaymentDetailDTO extends PaymentDTO {
 
     public void setStudio(String studio) {
         this.studio = studio;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
     }
 }

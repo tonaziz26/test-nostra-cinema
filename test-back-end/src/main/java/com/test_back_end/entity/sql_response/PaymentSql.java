@@ -18,8 +18,11 @@ public class PaymentSql {
     private String transactionId;
     private String chairNumber;
     private String userName;
+    private LocalDateTime paymentDate;
 
-    public PaymentSql(String secureId, String paymentNumber, PaymentStatus status, LocalDateTime expiredTime, LocalDateTime bookingDate, BigDecimal totalPrice, String location, String studioNumber, String transactionId, String chairNumber, String userName) {
+    public PaymentSql(String secureId, String paymentNumber, PaymentStatus status, LocalDateTime expiredTime,
+                      LocalDateTime bookingDate, BigDecimal totalPrice, String location, String studioNumber,
+                      String transactionId, String chairNumber, String userName, LocalDateTime paymentDate) {
         this.secureId = secureId;
         this.paymentNumber = paymentNumber;
         this.status = status;
@@ -31,6 +34,7 @@ public class PaymentSql {
         this.transactionId = transactionId;
         this.chairNumber = chairNumber;
         this.userName = userName;
+        this.paymentDate = paymentDate;
     }
 
     public String getSecureId() {
@@ -119,5 +123,13 @@ public class PaymentSql {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public LocalDateTime getPaymentDate() {
+        return paymentDate;
+    }
+
+    public void setPaymentDate(LocalDateTime paymentDate) {
+        this.paymentDate = paymentDate;
     }
 }
