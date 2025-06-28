@@ -7,9 +7,6 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 public class TransactionRequestDTO {
-    
-    @NotNull(message = "Account id is required")
-    private String accountId;
 
     @NotNull(message = "order number is required")
     private Integer orderNumber; // help to sorting
@@ -20,14 +17,6 @@ public class TransactionRequestDTO {
     @NotNull(message = "Price is required")
     @Positive(message = "Price must be greater than 0")
     private BigDecimal price;
-
-    public String getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
-    }
 
     public String getChairNumber() {
         return chairNumber;
