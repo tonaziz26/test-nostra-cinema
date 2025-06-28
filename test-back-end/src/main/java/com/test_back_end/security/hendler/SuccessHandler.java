@@ -1,6 +1,8 @@
 package com.test_back_end.security.hendler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.test_back_end.entity.Account;
+import com.test_back_end.repository.AccountRepository;
 import com.test_back_end.security.model.AccessJwtToken;
 import com.test_back_end.security.util.JwtTokenFactory;
 import jakarta.servlet.ServletException;
@@ -19,10 +21,12 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
 
     private final ObjectMapper objectMapper;
     private final JwtTokenFactory jwtFactory;
+    private final AccountRepository accountRepository;
 
-    public SuccessHandler(ObjectMapper objectMapper, JwtTokenFactory jwtFactory) {
+    public SuccessHandler(ObjectMapper objectMapper, JwtTokenFactory jwtFactory, AccountRepository accountRepository) {
         this.objectMapper = objectMapper;
         this.jwtFactory = jwtFactory;
+        this.accountRepository = accountRepository;
     }
 
 
@@ -33,8 +37,9 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
 
         Map<String, String> responseMap = new HashMap<>();
 
+        Account account = accountRepository.findBySessionId(userDetails.getUsername()).orElse(new Account());
 
-        AccessJwtToken jwtToken = jwtFactory.createAccessJwtToken(userDetails.getUsername(), userDetails.getAuthorities());
+        AccessJwtToken jwtToken = jwtFactory.createAccessJwtToken(account.getEmail(), userDetails.getAuthorities());
 
         responseMap.put("token", jwtToken.getRawToken());
         response.setStatus(200);

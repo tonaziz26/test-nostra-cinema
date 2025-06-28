@@ -51,7 +51,15 @@ public class PaymentController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<PaymentDTO> updatePaymentStatus(@PathVariable String secureId,
                                                           @Valid @RequestBody PaymentApprovalDTO approvalDTO) {
-        PaymentDTO paymentDTO = paymentService.updatePaymentStatus(secureId, approvalDTO);
+        PaymentDTO paymentDTO = paymentService.approvalPayment(secureId, approvalDTO);
         return new ResponseEntity<>(paymentDTO, HttpStatus.OK);
     }
+
+    @PutMapping("/cancel/{secureId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    public ResponseEntity<PaymentDTO> cancelPayment(@PathVariable String secureId) {
+        PaymentDTO paymentDTO = paymentService.cancelPayment(secureId);
+        return new ResponseEntity<>(paymentDTO, HttpStatus.OK);
+    }
+
 }

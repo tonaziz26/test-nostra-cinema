@@ -60,10 +60,9 @@ public class LayoutPositionValidator implements ConstraintValidator<LayoutPositi
 
         String chairNumberRight = paymentRequestDTO.getTransactions().get(paymentRequestDTO.getTransactions().size() - 1).getChairNumber();
 
-        // buat 1 baris
-        // buat di db
+
         Optional<LayoutStudioDTO> currentChairRight = layoutStudios.stream()
-                .filter(ls -> chairNumberLeft.equals(ls.getChairNumber()))
+                .filter(ls -> chairNumberRight.equals(ls.getChairNumber()))
                 .findFirst();
 
         if (currentChairRight.isEmpty()) {

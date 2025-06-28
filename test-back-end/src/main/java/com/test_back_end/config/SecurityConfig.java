@@ -80,8 +80,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SuccessHandler usernamePasswordAuthenticationSuccessHandler(ObjectMapper objectMapper, JwtTokenFactory jwtFactory) {
-        return new SuccessHandler(objectMapper, jwtFactory);
+    public SuccessHandler usernamePasswordAuthenticationSuccessHandler(ObjectMapper objectMapper, JwtTokenFactory jwtFactory, AccountRepository accountRepository) {
+        return new SuccessHandler(objectMapper, jwtFactory, accountRepository);
     }
 
     @Bean
