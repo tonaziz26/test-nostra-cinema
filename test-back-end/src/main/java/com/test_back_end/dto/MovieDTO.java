@@ -1,7 +1,10 @@
 package com.test_back_end.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class MovieDTO {
     private Long id;
+    @JsonProperty("title")
     private String name;
 
     private String urlImage;
