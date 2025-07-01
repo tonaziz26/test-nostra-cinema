@@ -1,11 +1,13 @@
 package com.test_back_end.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.test_back_end.enums.MovieStatus;
 
 import java.time.LocalDate;
 
 public class MovieDetailDTO {
     private Long id;
+    @JsonProperty("title")
     private String name;
     private LocalDate startDate;
     private LocalDate endDate;

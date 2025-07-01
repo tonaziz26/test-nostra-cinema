@@ -8,9 +8,6 @@ import java.math.BigDecimal;
 
 public class TransactionRequestDTO {
 
-    @NotNull(message = "order number is required")
-    private Integer orderNumber; // help to sorting
-
     @NotBlank(message = "Chair number is required")
     private String chairNumber;
     
@@ -32,13 +29,5 @@ public class TransactionRequestDTO {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
-    }
-
-    public Integer getOrderNumber() {
-        return orderNumber;
-    }
-
-    public void setOrderNumber(Integer orderNumber) {
-        this.orderNumber = orderNumber;
     }
 }
