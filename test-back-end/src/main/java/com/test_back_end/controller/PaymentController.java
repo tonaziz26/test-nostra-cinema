@@ -15,7 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/payment")
+@RequestMapping("/v1/payments")
 @SecurityRequirement(name = "Bearer Authentication")
 public class PaymentController {
 
@@ -47,7 +47,7 @@ public class PaymentController {
         return new ResponseEntity<>(paymentDTO, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update-status/{secureId}")
+    @PutMapping("/{secureId}/status")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<PaymentDTO> updatePaymentStatus(@PathVariable String secureId,
                                                           @Valid @RequestBody PaymentApprovalDTO approvalDTO) {
@@ -55,7 +55,7 @@ public class PaymentController {
         return new ResponseEntity<>(paymentDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/cancel/{secureId}")
+    @PutMapping("/{secureId}/cancellation")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public ResponseEntity<PaymentDTO> cancelPayment(@PathVariable String secureId) {
         PaymentDTO paymentDTO = paymentService.cancelPayment(secureId);

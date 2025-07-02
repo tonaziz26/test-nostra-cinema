@@ -24,7 +24,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             @Param("currentDate") LocalDate currentDate,
             Pageable pageable);
 
-    Page<Movie> findByNameContainingIgnoreCase(String name, Pageable pageable);
+    Page<Movie> findByTitleContainingIgnoreCase(String name, Pageable pageable);
 
-    boolean existsByNameIgnoreCase(String trim);
+    boolean existsByTitleIgnoreCase(String trim);
 }

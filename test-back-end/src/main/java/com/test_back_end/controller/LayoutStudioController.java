@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/layout-studio")
+@RequestMapping("/v1/layout-seats")
 @SecurityRequirement(name = "Bearer Authentication")
 public class LayoutStudioController {
 
@@ -19,7 +19,7 @@ public class LayoutStudioController {
     private LayoutStudioService layoutStudioService;
 
 
-    @GetMapping("/session-movie")
+    @GetMapping("")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<LayoutStudioDTO>> getLayoutStudio(
             @RequestParam(name = "session_movie_id") Long sessionMovieId) {

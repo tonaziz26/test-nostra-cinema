@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -30,6 +31,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import java.util.List;
 
@@ -40,22 +43,20 @@ public class SecurityConfig {
 
     private final static String AUTH_URL_OTP = "/v1/otp";
     private final static String AUTH_URL = "/v1/login";
-    private final static String CITY = "/api/city/**";
-    private final static String MOVIE = "/api/movie/**";
-    private final static String SESSION = "/api/session/**";
+    private final static String CITY = "/v1/cities/**";
+    private final static String SESSION = "/v1/sessions/**";
     private final static String SWAGGER_UI = "/swagger-ui/**";
     private final static String SWAGGER_API_DOCS = "/v3/api-docs/**";
     private final static String SWAGGER_CONFIG = "/configuration/**";
     private final static String WEBJARS = "/webjars/**";
 
-    private final static String ACCOUNT = "/api/account/**";
-    private final static String LAYOUT_STUDIO = "/api/layout-studio/**";
-    private final static String PAYMENT = "/api/payment/**";
-    private final static String MOVIE_ADMIN = "/api/movie-admin/**";
+    private final static String ACCOUNT = "/v1/accounts/**";
+    private final static String LAYOUT_SEAT = "/v1/layout-seats/**";
+    private final static String PAYMENT = "/v1/payments/**";
 
-    private final static List<String> PERMS = List.of(AUTH_URL_OTP, AUTH_URL, CITY, MOVIE, SESSION,
+    private final static List<String> PERMS = List.of(AUTH_URL_OTP, AUTH_URL, CITY, SESSION,
                                                SWAGGER_UI, SWAGGER_API_DOCS, SWAGGER_CONFIG, WEBJARS);
-    private final static List<String> AUTHENTICATION = List.of(ACCOUNT, LAYOUT_STUDIO, PAYMENT, MOVIE_ADMIN);
+    private final static List<String> AUTHENTICATION = List.of(ACCOUNT, LAYOUT_SEAT, PAYMENT);
 
 
     @Autowired
@@ -135,24 +136,53 @@ public class SecurityConfig {
                                                          SessionIdOtpAuthFilter usernamePasswordAuthProcessingFilter,
                                                          JwtAuthFilter jwtAuthFilter) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers(PERMS.toArray(new String[0])).permitAll()
-                .requestMatchers(AUTHENTICATION.toArray(new String[0])).authenticated()
-            ).csrf(AbstractHttpConfigurer::disable)
-            .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        .requestMatchers(HttpMethod.GET, "/v1/movies/presigned-upload").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/v1/movies").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/v1/movies/**").permitAll()
+                        .requestMatchers(PERMS.toArray(new String[0])).permitAll()
+                        .requestMatchers(AUTHENTICATION.toArray(new String[0])).authenticated()
+                )
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.addFilterBefore(usernamePasswordAuthProcessingFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
 
     }
 
     @Bean
-    public JwtAuthFilter jwtAuthFilter(@Qualifier("usernamePasswordAuthenticationFailureHandler") AuthenticationFailureHandler failureHandler, AuthenticationManager authManager) {
-        SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(PERMS, AUTHENTICATION);
+    public JwtAuthFilter jwtAuthFilter(
+            @Qualifier("usernamePasswordAuthenticationFailureHandler") AuthenticationFailureHandler failureHandler,
+            AuthenticationManager authManager) {
+
+        List<RequestMatcher> skipMatchers = List.of(
+                new AntPathRequestMatcher("/v1/otp"),
+                new AntPathRequestMatcher("/v1/login"),
+                new AntPathRequestMatcher("/v1/cities/**"),
+                new AntPathRequestMatcher("/v1/sessions/**"),
+                new AntPathRequestMatcher("/swagger-ui/**"),
+                new AntPathRequestMatcher("/v3/api-docs/**"),
+                new AntPathRequestMatcher("/configuration/**"),
+                new AntPathRequestMatcher("/webjars/**"),
+                new AntPathRequestMatcher("/v1/movies/**", HttpMethod.GET.name()) // granular
+        );
+
+        List<RequestMatcher> authMatchers = List.of(
+                new AntPathRequestMatcher("/v1/accounts/**"),
+                new AntPathRequestMatcher("/v1/layout-seats/**"),
+                new AntPathRequestMatcher("/v1/payments/**"),
+                new AntPathRequestMatcher("/v1/movies", HttpMethod.POST.name()),
+                new AntPathRequestMatcher("/v1/movies/presigned-upload", HttpMethod.GET.name())
+        );
+
+        SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(skipMatchers, authMatchers);
         JwtAuthFilter filter = new JwtAuthFilter(matcher, failureHandler);
         filter.setAuthenticationManager(authManager);
         return filter;
     }
+
 
     @Bean
     public FailedOtpHandler failedOtpHandler(ObjectMapper objectMapper, AccountRepository accountRepository) {

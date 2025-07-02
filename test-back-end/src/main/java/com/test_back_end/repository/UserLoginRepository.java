@@ -16,9 +16,8 @@ public interface UserLoginRepository extends JpaRepository<UserLogin, Long> {
             "FROM UserLogin u " +
             "INNER JOIN Account a on u.account.id = a.id " +
             "INNER JOIN Role r on a.role.id = r.id " +
-            "WHERE u.sessionId = :sessionId " +
-            "AND u.otp = :otp")
-    Optional<AccountSQL> findBySessionIdAndPassword(String sessionId, String otp);
+            "WHERE u.sessionId = :sessionId ")
+    Optional<AccountSQL> findBySessionIdAndPassword(String sessionId);
 
     Optional<UserLogin> findBySessionId(String sessionId);
 }

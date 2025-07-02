@@ -14,7 +14,7 @@ public class Movie {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String title;
 
     @Column(name = "start_date")
     private LocalDate startDate;
@@ -36,12 +36,12 @@ public class Movie {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public LocalDate getStartDate() {

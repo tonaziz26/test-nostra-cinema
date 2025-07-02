@@ -28,7 +28,7 @@ public class JwtTokenFactory {
         LocalDateTime currentTime = LocalDateTime.now();
         Date CurrentTimeDate = Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant());
 
-        LocalDateTime expiryTime = currentTime.plusDays(1);
+        LocalDateTime expiryTime = currentTime.plusDays(7);
         Date expiryTimeDate = Date.from(expiryTime.atZone(ZoneId.systemDefault()).toInstant());
 
         String token = Jwts.builder()

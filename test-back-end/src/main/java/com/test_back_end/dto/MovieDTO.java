@@ -1,20 +1,17 @@
 package com.test_back_end.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class MovieDTO {
     private Long id;
-    @JsonProperty("title")
-    private String name;
+    private String title;
 
     private String urlImage;
     
     public MovieDTO() {
     }
     
-    public MovieDTO(Long id, String name, String urlImage) {
+    public MovieDTO(Long id, String title, String urlImage) {
         this.id = id;
-        this.name = name;
+        this.title = title;
         this.urlImage = urlImage;
     }
 
@@ -26,12 +23,12 @@ public class MovieDTO {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getUrlImage() {

@@ -1,14 +1,12 @@
 package com.test_back_end.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.test_back_end.enums.MovieStatus;
 
 import java.time.LocalDate;
 
 public class MovieDetailDTO {
     private Long id;
-    @JsonProperty("title")
-    private String name;
+    private String title;
     private LocalDate startDate;
     private LocalDate endDate;
     private String urlImage;
@@ -17,9 +15,9 @@ public class MovieDetailDTO {
     public MovieDetailDTO() {
     }
 
-    public MovieDetailDTO(Long id, String name, LocalDate startDate, LocalDate endDate, String urlImage, MovieStatus status) {
+    public MovieDetailDTO(Long id, String title, LocalDate startDate, LocalDate endDate, String urlImage, MovieStatus status) {
         this.id = id;
-        this.name = name;
+        this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
         this.urlImage = urlImage;
@@ -34,12 +32,12 @@ public class MovieDetailDTO {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public LocalDate getStartDate() {

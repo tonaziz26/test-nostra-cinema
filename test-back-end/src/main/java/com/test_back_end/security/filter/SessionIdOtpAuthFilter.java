@@ -8,6 +8,7 @@ import com.test_back_end.repository.UserLoginRepository;
 import com.test_back_end.security.LoginRequestDto;
 import com.test_back_end.security.hendler.FailedOtpHandler;
 import com.test_back_end.security.hendler.SuccessHandler;
+import com.test_back_end.util.EncryptionUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -50,10 +51,10 @@ public class SessionIdOtpAuthFilter extends AbstractAuthenticationProcessingFilt
                 sendMessage(request, response, "Session ID and OTP are required");
             }
 
-            AccountSQL account = userLoginRepository.findBySessionIdAndPassword(loginDto.sessionId(), loginDto.otp())
+            AccountSQL account = userLoginRepository.findBySessionIdAndPassword(loginDto.sessionId())
                     .orElse(null);
 
-            if (account == null) {
+            if (account == null || !EncryptionUtil.decrypt(account.getOtp()).equals(loginDto.otp())) {
                 sendMessage(request, response, validateOtp(loginDto.sessionId()));
             }
 
@@ -66,9 +67,6 @@ public class SessionIdOtpAuthFilter extends AbstractAuthenticationProcessingFilt
             }
 
             return this.getAuthenticationManager().authenticate(account);
-
-
-
     }
 
     @Override
@@ -108,6 +106,4 @@ public class SessionIdOtpAuthFilter extends AbstractAuthenticationProcessingFilt
         request.setAttribute("message", messages);
         unsuccessfulAuthentication(request, response, null);
     }
-
-
 }
