@@ -5,6 +5,7 @@ import com.test_back_end.entity.Account;
 import com.test_back_end.entity.UserLogin;
 import com.test_back_end.repository.AccountRepository;
 import com.test_back_end.repository.UserLoginRepository;
+import com.test_back_end.util.EncryptionUtil;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -48,10 +49,13 @@ public class AccountService {
 
         Random random = new Random();
         int number = random.nextInt(1_000_000);
+        String otpValue = String.valueOf(number);
+        
+        String encryptedOtp = EncryptionUtil.encrypt(otpValue);
 
         UserLogin userLogin = new UserLogin();
         userLogin.setAccount(account);
-        userLogin.setOtp(String.valueOf(number));
+        userLogin.setOtp(encryptedOtp);
         userLogin.setUsed(false);
         userLogin.setSessionId(sessionId);
         userLogin.setExpiredTime(LocalDateTime.now().plusMinutes(5));

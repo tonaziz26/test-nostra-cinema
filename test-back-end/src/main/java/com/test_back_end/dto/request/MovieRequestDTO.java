@@ -9,9 +9,9 @@ import jakarta.validation.constraints.NotNull;
 @EndDateAfterStartDate()
 public class MovieRequestDTO {
 
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "Title is required")
     @UniqueMovieName()
-    private String name;
+    private String title;
 
     @NotNull(message = "Start date is required")
     @FutureOrTodayEpoch
@@ -23,12 +23,12 @@ public class MovieRequestDTO {
 
     private String imageFileName;
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
 

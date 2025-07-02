@@ -8,20 +8,13 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SkipPathRequestMatcher implements RequestMatcher{
-    private OrRequestMatcher skipMatcher;
-    private OrRequestMatcher processingMatcher;
+public class SkipPathRequestMatcher implements RequestMatcher {
+    private final OrRequestMatcher skipMatcher;
+    private final OrRequestMatcher processingMatcher;
 
-    public SkipPathRequestMatcher(List<String> pathToSkip, List<String> processingPath) {
-        List<RequestMatcher> skip = pathToSkip.stream()
-                .map(p -> new AntPathRequestMatcher(p))
-                .collect(Collectors.toList());
-        skipMatcher = new OrRequestMatcher(skip);
-
-        List<RequestMatcher> processing = processingPath.stream()
-                .map(p -> new AntPathRequestMatcher(p))
-                .collect(Collectors.toList());
-        processingMatcher = new OrRequestMatcher(processing);
+    public SkipPathRequestMatcher(List<RequestMatcher> pathsToSkip, List<RequestMatcher> pathsToProcess) {
+        this.skipMatcher = new OrRequestMatcher(pathsToSkip);
+        this.processingMatcher = new OrRequestMatcher(pathsToProcess);
     }
 
     @Override
@@ -32,3 +25,4 @@ public class SkipPathRequestMatcher implements RequestMatcher{
         return processingMatcher.matches(request);
     }
 }
+

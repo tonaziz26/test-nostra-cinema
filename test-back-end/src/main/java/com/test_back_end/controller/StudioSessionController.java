@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/api/session")
+@RequestMapping("/v1/sessions")
 @Validated
 public class StudioSessionController {
 
@@ -27,7 +27,7 @@ public class StudioSessionController {
         this.studioSessionService = studioSessionService;
     }
 
-    @GetMapping("/available")
+    @GetMapping("")
     public ResponseEntity<Set<TheaterDto>> getSessionList(
             @RequestParam(name = "city_code") @NotNull(message = "City code is required") String cityCode,
             @RequestParam(name = "movie_id") @NotNull(message = "Movie id is required") Long movieId,

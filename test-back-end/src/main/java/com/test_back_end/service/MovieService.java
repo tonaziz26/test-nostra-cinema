@@ -54,7 +54,7 @@ public class MovieService {
 
     public MovieDTO createMovie(MovieRequestDTO request) {
         Movie movie = new Movie();
-        movie.setName(request.getName());
+        movie.setTitle(request.getTitle());
 
         movie.setStartDate(Instant.ofEpochMilli(request.getStartDate())
                 .atZone(ZoneId.systemDefault())
@@ -81,11 +81,11 @@ public class MovieService {
         return new PageResultDTO<>(toMovieDTOs(moviePage), moviePage.getTotalPages(), moviePage.getTotalElements());
     }
 
-    public PageResultDTO<MovieDTO> getListMovie(String name, int page, int limit, String sort, String direction) {
+    public PageResultDTO<MovieDTO> getListMovie(String title, int page, int limit, String sort, String direction) {
         Sort.Direction dir = PaginationUtil.getSortDirection(direction);
         Pageable pageable = PageRequest.of(page, limit, Sort.by(new Sort.Order(dir, sort)));
 
-        Page<Movie> moviePage = movieRepository.findByNameContainingIgnoreCase(name, pageable);
+        Page<Movie> moviePage = movieRepository.findByTitleContainingIgnoreCase(title, pageable);
 
         return new PageResultDTO<>(toMovieDTOs(moviePage), moviePage.getTotalPages(), moviePage.getTotalElements());
     }
@@ -106,7 +106,7 @@ public class MovieService {
 
         return new MovieDetailDTO(
                 movie.getId(),
-                movie.getName(),
+                movie.getTitle(),
                 movie.getStartDate(),
                 movie.getEndDate(),
                 minioProperties.getUrl() + "/" + minioProperties.getBucketName() + movie.getUrlImage(),
@@ -126,7 +126,7 @@ public class MovieService {
         String url = StringUtils.isEmpty(movie.getUrlImage()) ? "" : minioProperties.getUrl() + "/" + minioProperties.getBucketName() + movie.getUrlImage();
         return new MovieDTO(
                 movie.getId(),
-                movie.getName(),
+                movie.getTitle(),
                 url
         );
     }
