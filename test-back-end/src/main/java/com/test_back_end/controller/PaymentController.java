@@ -23,7 +23,7 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public ResponseEntity<PageResultDTO<PaymentDTO>> getPaymentList(
             @RequestParam(name = "paymentNumber", defaultValue = "", required = false) String paymentNumber,
             @RequestParam(name = "page", defaultValue = "0") int page,
