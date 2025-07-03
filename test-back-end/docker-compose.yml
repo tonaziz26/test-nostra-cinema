@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   db:
     image: postgres:14
@@ -12,6 +13,36 @@ services:
       - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  db_init:
+    image: postgres:14
+    container_name: nostra_cinema_db_init
+    depends_on:
+      - db
+    restart: "no"
+    environment:
+      PGPASSWORD: admin
+    volumes:
+      - ./db_nostra_cinema.tar:/db_nostra_cinema.tar
+    entrypoint: |
+      bash -c "
+      echo '⏳ Menunggu database siap...';
+      until pg_isready -h db -p 5432 -U postgres; do
+        sleep 2;
+      done;
+      echo '✅ Database siap.';
+
+      DB_EXIST=$$(psql -h db -U postgres -tAc \"SELECT 1 FROM pg_database WHERE datname='nostra_cinema'\");
+      if [ \"$$DB_EXIST\" != \"1\" ]; then
+        echo '📂 Membuat database nostra_cinema...';
+        createdb -h db -U postgres nostra_cinema;
+        echo '🔄 Restore dump ke database nostra_cinema...';
+        pg_restore -h db -U postgres -d nostra_cinema /db_nostra_cinema.tar;
+        echo '✅ Restore selesai.';
+      else
+        echo '✅ Database nostra_cinema sudah ada. Lewati restore.';
+      fi
+      "
 
   minio:
     image: minio/minio
