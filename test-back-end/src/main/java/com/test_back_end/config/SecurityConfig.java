@@ -50,7 +50,7 @@ public class SecurityConfig {
     private final static String SWAGGER_CONFIG = "/configuration/**";
     private final static String WEBJARS = "/webjars/**";
 
-    private final static String ACCOUNT = "/v1/accounts/**";
+    private final static String ACCOUNT = "/v1/account/**";
     private final static String LAYOUT_SEAT = "/v1/layout-seats/**";
     private final static String PAYMENT = "/v1/payments/**";
 
@@ -170,7 +170,7 @@ public class SecurityConfig {
         );
 
         List<RequestMatcher> authMatchers = List.of(
-                new AntPathRequestMatcher("/v1/accounts/**"),
+                new AntPathRequestMatcher("/v1/account/**"),
                 new AntPathRequestMatcher("/v1/layout-seats/**"),
                 new AntPathRequestMatcher("/v1/payments/**"),
                 new AntPathRequestMatcher("/v1/movies", HttpMethod.POST.name()),

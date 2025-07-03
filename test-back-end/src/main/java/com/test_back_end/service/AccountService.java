@@ -5,6 +5,7 @@ import com.test_back_end.entity.Account;
 import com.test_back_end.entity.UserLogin;
 import com.test_back_end.repository.AccountRepository;
 import com.test_back_end.repository.UserLoginRepository;
+import com.test_back_end.util.AuthUtil;
 import com.test_back_end.util.EncryptionUtil;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +25,9 @@ public class AccountService {
         this.userLoginRepository = userLoginRepository;
     }
 
-    public AccountResponseDTO getAccountDetailBySecureId(String secureId) {
-        Account account = accountRepository.findBySecureId(secureId)
-                .orElseThrow(() -> new RuntimeException("Account not found with secureId: " + secureId));
+    public AccountResponseDTO getAccountDetail() {
+        Account account = accountRepository.findByEmail(AuthUtil.getEmail())
+                .orElseThrow(() -> new RuntimeException("Account not found with email: " + AuthUtil.getEmail()));
 
         return mapToResponseDTO(account);
     }

@@ -8,7 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/v1/accounts")
+@RequestMapping("/v1/account")
 @SecurityRequirement(name = "Bearer Authentication")
 public class AccountController {
 
@@ -18,10 +18,10 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @GetMapping("/{secureId}")
+    @GetMapping("")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<AccountResponseDTO> getDetailAccount(@PathVariable String secureId) {
-        AccountResponseDTO accountResponse = accountService.getAccountDetailBySecureId(secureId);
+    public ResponseEntity<AccountResponseDTO> getDetailAccount() {
+        AccountResponseDTO accountResponse = accountService.getAccountDetail();
         return ResponseEntity.ok(accountResponse);
     }
 }
